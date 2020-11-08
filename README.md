@@ -1,7 +1,7 @@
 <h1 align="center">💨 Add Tailwind CSS to Svelte</h1>
 
 ## ❓ What is this?
-This is a **work in progress** command to run to add Tailwind CSS to your Svelte project.
+This is a **work in progress** command to run to add Tailwind CSS to your Svelte project (generated with `create-svelte`).
 
 ## 🛠 Usage
 You must start with a fresh copy of the official `create-svelte` template, which is currently created by running this command:
