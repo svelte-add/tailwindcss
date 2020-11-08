@@ -16,12 +16,37 @@ module.exports = Preset.make("svelte-add-tailwindcss")
 		})
 		.chain()
 	.edit(["svelte.config.js"])
-		.replace(`preprocess: sveltePreprocess()`)
-		.with(`preprocess: [ sveltePreprocess({ defaults: { style: "postcss" }, postcss: true }) ]`)
+		.replace(/^(.+)$/s)
+		.with({
+			replacer: (match) => {
+				let result = match;
+
+				if (match.includes("preprocess:")) {
+					result = result.replace("preprocess: sveltePreprocess()", `preprocess: [ sveltePreprocess({ defaults: { style: "postcss" }, postcss: true }) ]`)
+				} else {
+					result = `const sveltePreprocess = require` + `("svelte-preprocess");\n${result}`;
+					result = result.replace("adapter:", `preprocess: [ sveltePreprocess({ defaults: { style: "postcss" }, postcss: true }) ],\n\tadapter:`);
+				}
+
+				return result;
+			}
+		})
 		.chain()
 	.edit(["snowpack.config.js"])
-		.replace(`plugins: ['@snowpack/plugin-typescript']`)
-		.with(`plugins: ['@snowpack/plugin-typescript', ["@snowpack/plugin-build-script", { "cmd": "postcss", "input": [".css", ".pcss"], "output": [".css"] }]]`)
+		.replace(/^(.+)$/s)
+		.with({
+			replacer: (match) => {
+				let result = match;
+
+				if (match.includes("plugins:")) {
+					result = result.replace(`plugins: ['@snowpack/plugin-typescript']`, `plugins: ['@snowpack/plugin-typescript', ["@snowpack/plugin-build-script", { "cmd": "postcss", "input": [".css", ".pcss"], "output": [".css"] }]]`)
+				} else {
+					result = result.replace("extends:", `plugins: [["@snowpack/plugin-build-script", { "cmd": "postcss", "input": [".css", ".pcss"], "output": [".css"] }]],\n\textends:`);
+				}
+
+				return result;
+			}
+		})
 		.chain()
 	.edit(["src/routes/index.svelte"])
 		.replace(`<a href`)
