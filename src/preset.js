@@ -10,9 +10,15 @@ module.exports = Preset.make("svelte-add-tailwindcss")
 				"postcss": "^8.1.6",
 				"postcss-load-config": "^3.0.0",
 				"postcss-cli": "^8.2.0",
-				"tailwindcss": "^2.0.0-alpha.9",
+				// https://github.com/babichjacob/svelte-add-tailwindcss/issues/1
+				"snowpack": "2.17.0",
 				"svelte-preprocess": "^4.5.2",
+				"tailwindcss": "^2.0.0-alpha.9",
 			},
+			// https://github.com/babichjacob/svelte-add-tailwindcss/issues/1
+			resolutions: {
+				"snowpack": "2.17.0",
+			}
 		})
 		.chain()
 	.edit(["svelte.config.js"])
