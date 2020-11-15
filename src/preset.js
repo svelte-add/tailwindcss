@@ -7,13 +7,13 @@ module.exports = Preset.make("svelte-add-tailwindcss")
 			devDependencies: {
 				"@snowpack/plugin-build-script": "^2.0.11",
 				"cssnano": "^4.1.10",
-				"postcss": "^8.1.6",
+				"postcss": "^8.1.7",
 				"postcss-load-config": "^3.0.0",
 				"postcss-cli": "^8.2.0",
 				// https://github.com/babichjacob/svelte-add-tailwindcss/issues/1
 				"snowpack": "2.17.0",
 				"svelte-preprocess": "^4.5.2",
-				"tailwindcss": "^2.0.0-alpha.9",
+				"tailwindcss": "^2.0.0-alpha.20",
 			},
 			// https://github.com/babichjacob/svelte-add-tailwindcss/issues/1
 			resolutions: {
@@ -82,7 +82,7 @@ module.exports = Preset.make("svelte-add-tailwindcss")
 				result = result.replace(`@media (min-width: 480px)`, `@screen sm`);
 				
 				result = result.replace(`max-width: none`, `@apply max-w-none`);
-				
+
 				result = result.replace(`max-width: none`, `@apply max-w-none`);
 
 				return result;
