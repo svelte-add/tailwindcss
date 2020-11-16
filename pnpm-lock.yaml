@@ -571,14 +571,14 @@ packages:
     dev: true
     resolution:
       integrity: sha512-VUJ49FC8U1OxwZLxIbTTrDvLnf/6TDgxZcK8wxR8zs13xpx7xbG60ndBlhNrFi2EMuFRoeDoJO7wthSLq42EjA==
-  /simple-git/2.21.0:
+  /simple-git/2.22.0:
     dependencies:
       '@kwsites/file-exists': 1.1.1
       '@kwsites/promise-deferred': 1.1.1
       debug: 4.2.0
     dev: true
     resolution:
-      integrity: sha512-rohCHmEjD/ESXFLxF4bVeqgdb4Awc65ZyyuCKl3f7BvgMbZOBa/Ye3HN/GFnvruiUOAWWNupxhz3Rz5/3vJLTg==
+      integrity: sha512-/8WMNrQ5slYl05jYOpeh4BIyMQc84PkEvk9YAcBHVJaPoAgoxzLzdRzUzWDZJ9U6Z2pUjLxkGcQC0kU4pbRN5Q==
   /slice-ansi/3.0.0:
     dependencies:
       ansi-styles: 4.3.0
@@ -687,7 +687,7 @@ packages:
       node-fetch: 2.6.1
       reflect-metadata: 0.1.13
       rfdc: 1.1.4
-      simple-git: 2.21.0
+      simple-git: 2.22.0
       tmp: 0.2.1
       tslib: 2.0.3
     dev: true
