@@ -13,7 +13,7 @@ module.exports = Preset.make("svelte-add-tailwindcss")
 				// https://github.com/babichjacob/svelte-add-tailwindcss/issues/1
 				"snowpack": "2.17.0",
 				"svelte-preprocess": "^4.5.2",
-				"tailwindcss": "^2.0.0-alpha.20",
+				"tailwindcss": "^2.0.0-alpha.21",
 			},
 			// https://github.com/babichjacob/svelte-add-tailwindcss/issues/1
 			resolutions: {
