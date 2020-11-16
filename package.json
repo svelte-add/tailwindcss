@@ -1,6 +1,9 @@
 {
     "name": "svelte-add-tailwindcss",
+    "private": true,
+    "version": "2020.11.16",
     "description": "A command to add Tailwind CSS (and PostCSS) to your Svelte project (generated with create-svelte)",
+    "author": "Jacob Babich <jacobbabichpublic+git@gmail.com>",
     "keywords": [
         "svelte",
         "sveltekit",
@@ -10,15 +13,14 @@
         "tailwindcss",
         "cssnano"
     ],
-    "homepage": "https://github.com/babichjacob/svelte-add-tailwindcss",
+    "license": "MIT",
     "repository": {
         "type": "git",
         "url": "https://github.com/babichjacob/svelte-add-tailwindcss.git"
     },
-    "license": "MIT",
-    "version": "2020.11.16",
+    "bugs": "https://github.com/babichjacob/svelte-add-tailwindcss/issues",
+    "homepage": "https://github.com/babichjacob/svelte-add-tailwindcss",
     "preset": "src/preset.js",
-    "private": true,
     "devDependencies": {
         "use-preset": "^0.1.26"
     }
