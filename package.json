@@ -16,7 +16,7 @@
         "url": "https://github.com/babichjacob/svelte-add-tailwindcss.git"
     },
     "license": "MIT",
-    "version": "2020.11.07",
+    "version": "2020.11.16",
     "preset": "src/preset.js",
     "private": true,
     "devDependencies": {
