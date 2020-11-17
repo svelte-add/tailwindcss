@@ -1,56 +1,46 @@
 const { Preset } = require("use-preset");
 
+const globalCSS = `@tailwind base;
+@tailwind components;
+@tailwind utilities;`;
+
+const addTailwind = (otherPlugins) => `plugins: [
+		// Some plugins, like postcss-nested, need to run before Tailwind
+		
+		tailwindcss(),
+		
+		// But others, like autoprefixer, need to run after
+
+		${otherPlugins}]`;
+
 module.exports = Preset.make("svelte-add-tailwindcss")
 	.copyTemplates("ask")
 	.editJson("package.json")
 		.merge({
 			devDependencies: {
-				"@snowpack/plugin-build-script": "^2.0.11",
-				"cssnano": "^4.1.10",
-				"postcss": "^8.1.7",
-				"postcss-load-config": "^3.0.0",
-				"postcss-cli": "^8.2.0",
-				// https://github.com/babichjacob/svelte-add-tailwindcss/issues/1
-				"snowpack": "2.17.0",
-				"svelte-preprocess": "^4.5.2",
 				"tailwindcss": "^2.0.0-alpha.21",
 			},
-			// https://github.com/babichjacob/svelte-add-tailwindcss/issues/1
-			resolutions: {
-				"snowpack": "2.17.0",
-			}
 		})
 		.chain()
-	.edit(["svelte.config.js"])
+	.edit(["postcss.config.js"])
 		.replace(/^(.+)$/s)
 		.with({
 			replacer: (match) => {
 				let result = match;
-
-				if (match.includes("preprocess:")) {
-					result = result.replace("preprocess: sveltePreprocess()", `preprocess: [ sveltePreprocess({ defaults: { style: "postcss" }, postcss: true }) ]`)
-				} else {
-					result = `const sveltePreprocess = require` + `("svelte-preprocess");\n${result}`;
-					result = result.replace("adapter:", `preprocess: [ sveltePreprocess({ defaults: { style: "postcss" }, postcss: true }) ],\n\tadapter:`);
-				}
-
+				result = `const tailwindcss = require` + `("tailwindcss");\n${result}`;
+				
+				const matchPlugins = /plugins:[\s\n]\[[\s\n]*((?:.|\n)+)[\s\n]*\]/;
+				result = result.replace(matchPlugins, (_match, otherPlugins) => addTailwind(otherPlugins));
+				
 				return result;
 			}
 		})
 		.chain()
-	.edit(["snowpack.config.js"])
+	.edit(["src/routes/_global.pcss"])
 		.replace(/^(.+)$/s)
 		.with({
 			replacer: (match) => {
-				let result = match;
-
-				if (match.includes("plugins:")) {
-					result = result.replace(`plugins: ['@snowpack/plugin-typescript']`, `plugins: ['@snowpack/plugin-typescript', ["@snowpack/plugin-build-script", { "cmd": "postcss", "input": [".css", ".pcss"], "output": [".css"] }]]`)
-				} else {
-					result = result.replace("extends:", `plugins: [["@snowpack/plugin-build-script", { "cmd": "postcss", "input": [".css", ".pcss"], "output": [".css"] }]],\n\textends:`);
-				}
-
-				return result;
+				return match.replace("/* Write your global styles here, in PostCSS syntax */", globalCSS);
 			}
 		})
 		.chain()

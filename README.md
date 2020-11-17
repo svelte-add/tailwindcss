@@ -11,22 +11,22 @@ npm init svelte@next
 # https://svelte.dev/blog/whats-the-deal-with-sveltekit#When_can_I_start_using_it
 ```
 
-Once that is set up, run this command in your project directory to set up Tailwind CSS:
+Since Tailwind CSS is a PostCSS plugin, run this command in your project directory to [set up PostCSS for Svelte](https://github.com/babichjacob/svelte-add-postcss):
 ```sh
-npx use-preset babichjacob/svelte-add-tailwindcss  
+npx use-preset babichjacob/svelte-add-postcss
+```
+
+Finally, run this command in your project directory to set up Tailwind CSS:
+```sh
+npx use-preset babichjacob/svelte-add-tailwindcss
 ```
 
 After the preset runs,
 * You can use Tailwind utility classes like `bg-blue-700` in the markup (components, routes, `app.html`).
-* You can write PostCSS syntax in the `style` blocks in Svelte files.
-    * You can use Tailwind directives like `@apply` and `@screen` or use the `theme` function.
 
-* You can write PostCSS syntax in the `src/routes/_global.pcss` file.
-  
-  This is your global stylesheet because it will be active on every page of your site.
+* You can use Tailwind directives like `@apply` and `@screen` or use the `theme` function in Svelte `style` blocks or the `src/routes/_global.pcss` file.
 
 * Your Tailwind CSS will be purged for production builds.
-* All your CSS will be minified for production.
 
 ## 😵 Help! I have a question
 [Create an issue](https://github.com/babichjacob/svelte-add-tailwindcss/issues/new) and I'll try to help.
