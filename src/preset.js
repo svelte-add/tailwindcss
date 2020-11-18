@@ -18,7 +18,7 @@ module.exports = Preset.make("svelte-add-tailwindcss")
 	.editJson("package.json")
 		.merge({
 			devDependencies: {
-				"tailwindcss": "2.0.0-alpha.24",
+				"tailwindcss": "^2.0.1",
 			},
 		})
 		.chain()
