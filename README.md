@@ -24,7 +24,7 @@ npx use-preset babichjacob/svelte-add-tailwindcss
 After the preset runs,
 * You can use Tailwind utility classes like `bg-blue-700` in the markup (components, routes, `app.html`).
 
-* You can use Tailwind directives like `@apply` and `@screen` or use the `theme` function in Svelte `style` blocks or the `src/routes/_global.pcss` file.
+* You can use [Tailwind directives like `@apply` and `@screen` or use the `theme` function](https://tailwindcss.com/docs/functions-and-directives) in Svelte `style` blocks or the `src/routes/_global.pcss` file.
 
 * Your Tailwind CSS will be purged for production builds.
 
