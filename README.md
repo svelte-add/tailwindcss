@@ -28,7 +28,7 @@ After the preset runs,
 
 * Your Tailwind CSS will be purged for production builds.
 
-* You can apply another [Svelte Adder](https://github.com/babichjacob/svelte-adders) to your project for more functionality.
+* You can apply *another* [Svelte Adder](https://github.com/babichjacob/svelte-adders) to your project for more functionality.
 
 ## 😵 Help! I have a question
 [Create an issue](https://github.com/babichjacob/svelte-add-tailwindcss/issues/new) and I'll try to help.
