@@ -20,21 +20,21 @@ Preset.extract().withTitle("Adding Tailwind CSS config file");
 
 Preset.editJson("package.json").merge({
 	devDependencies: {
-		"tailwindcss": "^2.0.1",
+		"tailwindcss": "^2.0.2",
 	},
 }).withTitle("Adding needed dependencies");
 
 Preset.edit(["postcss.config.js"]).update((match) => {
 	let result = match;
 	result = `const tailwindcss = require` + `("tailwindcss");\n${result}`;
-				
+	
 	const matchPlugins = /plugins:[\s\n]\[[\s\n]*((?:.|\n)+)[\s\n]*\]/;
 	result = result.replace(matchPlugins, (_match, otherPlugins) => addTailwind(otherPlugins));
 				
 	return result;
 }).withTitle("Adding Tailwind CSS as a PostCSS plugin");
 
-Preset.edit(["src/routes/_global.pcss"]).update((match) => {
+Preset.edit(["src/routes/global.pcss"]).update((match) => {
 	return match.replace("/* Write your global styles here, in PostCSS syntax */", globalCSS);
 }).withTitle("Adding Tailwind directives to the global PostCSS file");
 
@@ -82,7 +82,7 @@ Preset.edit(["src/components/Counter.svelte"]).update((match) => {
 
 	result = result.replace(`border: 2px solid #ff3e00`, `@apply border-opacity-100`);
 
-	result = result.replace(`background-color: rgba(255, 62, 0, 0.2)`, `@apply bg-opacity-20`);
+	result = result.replace(`background-color: rgba(255, 62, 0, 0.2)`, `@apply bg-red-500 bg-opacity-20`);
 
 	return result;
 }).withTitle("Making src/components/Counter.svelte use Tailwind's @apply as an example");

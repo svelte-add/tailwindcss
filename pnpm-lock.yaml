@@ -1,10 +1,10 @@
 devDependencies:
-  use-preset: 0.2.5
+  use-preset: 0.2.11
 lockfileVersion: 5.2
 packages:
   /@kwsites/file-exists/1.1.1:
     dependencies:
-      debug: 4.2.0
+      debug: 4.3.1
     dev: true
     resolution:
       integrity: sha512-m9/5YGR18lIwxSFDwfE3oA7bWuq9kdau6ugN4H2rJeyhFQZcG9AgSHkQtSD15a8WvTgfz9aikZMrKPHvbpqFiw==
@@ -121,12 +121,12 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-b8um+L1RzM3WDSzvhm6gIz1yfTbBt6YTlcEKAvsmqCZZFw46z626lVj9j1yEPW33H5H+lBQpZMP1k8l+78Ha0A==
-  /cac/6.6.1:
+  /cac/6.7.1:
     dev: true
     engines:
       node: '>=8'
     resolution:
-      integrity: sha512-uhki4T3Ax68hw7Dufi0bATVAF8ayBSwOKUEJHjObPrUN4tlQ8Lf7oljpTje/mArLxYN0D743c2zJt4C1bVTCqg==
+      integrity: sha512-LfGt47+ugCY65W4yUEyxnZKd/tJSBJD/gUAxQGiQjH7yqdhbaX2XN0Rli4+0W0DJiDONmYeh0TlJxMtXGZspIg==
   /cli-boxes/2.2.1:
     dev: true
     engines:
@@ -193,6 +193,7 @@ packages:
   /debug/4.2.0:
     dependencies:
       ms: 2.1.2
+    deprecated: 'Debug versions >=3.2.0 <3.2.7 || >=4 <4.3.1 have a low-severity ReDos regression when used in a Node.js environment. It is recommended you upgrade to 3.2.7 or 4.3.1. (https://github.com/visionmedia/debug/issues/797)'
     dev: true
     engines:
       node: '>=6.0'
@@ -203,6 +204,19 @@ packages:
         optional: true
     resolution:
       integrity: sha512-IX2ncY78vDTjZMFUdmsvIRFY2Cf4FnD0wRs+nQwJU8Lu99/tPFdb0VybiiMTPe3I6rQmwsqQqRBvxU+bZ/I8sg==
+  /debug/4.3.1:
+    dependencies:
+      ms: 2.1.2
+    dev: true
+    engines:
+      node: '>=6.0'
+    peerDependencies:
+      supports-color: '*'
+    peerDependenciesMeta:
+      supports-color:
+        optional: true
+    resolution:
+      integrity: sha512-doEwdvm4PCeK4K3RQN2ZC2BYUBaxwLARCqZmMjtF8a51J2Rb0xpVloFRnCODwqjpwnAoao4pelN8l3RJdv3gRQ==
   /deepmerge/4.2.2:
     dev: true
     engines:
@@ -240,12 +254,12 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-JxpcaOgJQB/x0XFmNiqFu0BLK22PlI3F0d95of5SOqcLvBlGC0ug7MHYDWnmZqmx9svIue8v0cVcqAygPTyXHQ==
-  /esbuild/0.8.11:
+  /esbuild/0.8.23:
     dev: true
     hasBin: true
     requiresBuild: true
     resolution:
-      integrity: sha512-PTBeZ71qh7/Dm/57Sd10VG9TMKQAUbM9W6WD59ZYV62dDA/2a1xybzWqR3X7zbtxyqtFfY1PhYtg85QV0mrXNg==
+      integrity: sha512-LkgCmotGnhVgRGxjDkTBBYrnJ5stcxK+40cEJGtXUS16hcAWy90cn1qjxKCogzLPJ75gW/L6ejly7VKrMstVGQ==
   /eventemitter2/5.0.1:
     dev: true
     resolution:
@@ -378,10 +392,10 @@ packages:
     dev: true
     resolution:
       integrity: sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==
-  /inversify/5.0.1:
+  /inversify/5.0.5:
     dev: true
     resolution:
-      integrity: sha512-Ieh06s48WnEYGcqHepdsJUIJUXpwH5o5vodAX+DK2JA/gjy4EbEcQZxw+uFfzysmKjiLXGYwNG3qDZsKVMcINQ==
+      integrity: sha512-60QsfPz8NAU/GZqXu8hJ+BhNf/C/c+Hp0eDc6XMIJTxBiP36AQyyQKpBkOVTLWBFDQWYVHpbbEuIsHu9dLuJDA==
   /is-extglob/2.1.1:
     dev: true
     engines:
@@ -618,14 +632,14 @@ packages:
     dev: true
     resolution:
       integrity: sha512-VUJ49FC8U1OxwZLxIbTTrDvLnf/6TDgxZcK8wxR8zs13xpx7xbG60ndBlhNrFi2EMuFRoeDoJO7wthSLq42EjA==
-  /simple-git/2.22.0:
+  /simple-git/2.30.0:
     dependencies:
       '@kwsites/file-exists': 1.1.1
       '@kwsites/promise-deferred': 1.1.1
-      debug: 4.2.0
+      debug: 4.3.1
     dev: true
     resolution:
-      integrity: sha512-/8WMNrQ5slYl05jYOpeh4BIyMQc84PkEvk9YAcBHVJaPoAgoxzLzdRzUzWDZJ9U6Z2pUjLxkGcQC0kU4pbRN5Q==
+      integrity: sha512-R4CCSf6wS+IjmDgekzJ9fv5ZmsAaDEYxx4lQ1/W4ZDolLQ9NosXL4dqiYQd//Y0w858DaTz6+7MSBVTtpfO3eA==
   /slice-ansi/4.0.0:
     dependencies:
       ansi-styles: 4.3.0
@@ -715,26 +729,26 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha1-g3aHP30jNRef+x5vw6jtDfyKtVk=
-  /use-preset/0.2.5:
+  /use-preset/0.2.11:
     dependencies:
       '@poppinss/cliui': 2.0.2
       '@poppinss/prompts': 1.1.7
-      cac: 6.6.1
+      cac: 6.7.1
       debug: 4.2.0
       deepmerge: 4.2.2
       detect-indent: 6.0.0
       enquirer: 2.3.6
       envfile: 6.14.0
-      esbuild: 0.8.11
+      esbuild: 0.8.23
       execa: 4.1.0
       fast-glob: 3.2.4
       fs-extra: 9.0.1
-      inversify: 5.0.1
+      inversify: 5.0.5
       module-alias: 2.2.2
       node-fetch: 2.6.1
       reflect-metadata: 0.1.13
       rfdc: 1.1.4
-      simple-git: 2.22.0
+      simple-git: 2.30.0
       tmp: 0.2.1
       ts-bus: 2.3.1
       tslib: 2.0.3
@@ -744,7 +758,7 @@ packages:
       node: '>=12'
     hasBin: true
     resolution:
-      integrity: sha512-1Ms3lNUqtMkMNqNWtM6Gxgeb4BJltk/W2swD4bsfZx5JDnZ3ET+msdLymTz6biDQQVGXt/VMNk6BpoZEExr/Cg==
+      integrity: sha512-rWgDvaUwLxmY8/HeYWgigcmYpztZz1NzmjRKKoJOEjl1s3l2GGZgAhiY/tUaozhrAYSziF0F4/qjZ5kX2MmlUg==
   /which/2.0.2:
     dependencies:
       isexe: 2.0.0
@@ -769,4 +783,4 @@ packages:
     resolution:
       integrity: sha1-tSQ9jz7BqjXxNkYFvA0QNuMKtp8=
 specifiers:
-  use-preset: ^0.2.5
+  use-preset: ^0.2.11

@@ -21,6 +21,11 @@ Finally, run this command in your project directory to set up Tailwind CSS:
 npx use-preset babichjacob/svelte-add-tailwindcss --no-ssh
 ```
 
+Then ensure your dependencies are up to date:
+```sh
+pnpm update  # If you don't have pnpm, just get it already (and I don't know the npm equivalent of this command)
+```
+
 After the preset runs,
 * You can use Tailwind utility classes like `bg-blue-700` in the markup (components, routes, `app.html`).
 
