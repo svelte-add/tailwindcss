@@ -11,14 +11,14 @@ npm init svelte@next
 # https://svelte.dev/blog/whats-the-deal-with-sveltekit#When_can_I_start_using_it
 ```
 
-Since Tailwind CSS is a PostCSS plugin, run this command in your project directory to [set up PostCSS for Svelte](https://github.com/babichjacob/svelte-add-postcss):
+Since Tailwind CSS is a PostCSS plugin, run this command in your project directory to [set up PostCSS for Svelte](https://github.com/svelte-add/postcss):
 ```sh
-npx use-preset babichjacob/svelte-add-postcss --no-ssh
+npx use-preset svelte-add/postcss --no-ssh
 ```
 
 Finally, run this command in your project directory to set up Tailwind CSS:
 ```sh
-npx use-preset babichjacob/svelte-add-tailwindcss --no-ssh
+npx use-preset svelte-add/tailwindcss --no-ssh
 ```
 
 Then ensure your dependencies are up to date:
@@ -33,13 +33,13 @@ After the preset runs,
 
 * Your Tailwind CSS will be purged for production builds.
 
-* You can apply *another* [Svelte Adder](https://github.com/babichjacob/svelte-adders) to your project for more functionality.
+* You can apply *another* [Svelte Adder](https://github.com/svelte-add/svelte-adders) to your project for more functionality.
 
 ## 😵 Help! I have a question
-[Create an issue](https://github.com/babichjacob/svelte-add-tailwindcss/issues/new) and I'll try to help.
+[Create an issue](https://github.com/svelte-add/tailwindcss/issues/new) and I'll try to help.
 
 ## 😡 Fix! There is something that needs improvement
-[Create an issue](https://github.com/babichjacob/svelte-add-tailwindcss/issues/new) or [pull request](https://github.com/babichjacob/svelte-add-tailwindcss/pulls) and I'll try to fix.
+[Create an issue](https://github.com/svelte-add/tailwindcss/issues/new) or [pull request](https://github.com/svelte-add/tailwindcss/pulls) and I'll try to fix.
 
 These are new tools, so there are likely to be problems in this project. Thank you for bringing them to my attention or fixing them for me.
 
