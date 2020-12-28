@@ -1,5 +1,5 @@
 {
-    "name": "svelte-add-tailwindcss",
+    "name": "svelte-add/tailwindcss",
     "private": true,
     "version": "2020.12.17",
     "description": "A command to add Tailwind CSS to your SvelteKit project",
@@ -15,10 +15,10 @@
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "https://github.com/babichjacob/svelte-add-tailwindcss.git"
+        "url": "https://github.com/svelte-add/tailwindcss.git"
     },
-    "bugs": "https://github.com/babichjacob/svelte-add-tailwindcss/issues",
-    "homepage": "https://github.com/babichjacob/svelte-add-tailwindcss",
+    "bugs": "https://github.com/svelte-add/tailwindcss/issues",
+    "homepage": "https://github.com/svelte-add/tailwindcss",
     "preset": "preset.ts",
     "devDependencies": {
         "use-preset": "^0.2.11"
