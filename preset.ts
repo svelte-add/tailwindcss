@@ -34,8 +34,7 @@ Preset.edit(["postcss.config.js"]).update((match) => {
 	return result;
 }).withTitle("Adding Tailwind CSS as a PostCSS plugin");
 
-Preset.edit(["src/routes/global.pcss"]).update((match) => {
-	return match.replace("/* Write your global styles here, in PostCSS syntax */", globalCSS);
+	return match.replace(marker, marker + globalCSS);
 }).withTitle("Adding Tailwind directives to the global PostCSS file");
 
 Preset.edit(["src/routes/index.svelte"]).update((match) => {
