@@ -10,7 +10,7 @@ module.exports = {
 			defaultExtractor: (content) => [
 				// This is an internal Tailwind function that we're not supposed to be allowed to use
 				// So if this stops working, please open an issue at
-				// https://github.com/babichjacob/svelte-add-tailwindcss/issues
+				// https://github.com/svelte-add/tailwindcss/issues
 				// rather than bothering Tailwind Labs about it
 				...tailwindExtractor(content),
 				// Match Svelte class: directives (https://github.com/tailwindlabs/tailwindcss/discussions/1731)
