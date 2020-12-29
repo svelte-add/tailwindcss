@@ -1,4 +1,4 @@
-import { Preset } from "use-preset";
+import { Preset } from "apply";
 
 const globalCSS = `@tailwind base;
 @tailwind components;
@@ -14,7 +14,7 @@ const addTailwind = (otherPlugins) => `plugins: [
 		${otherPlugins}]`;
 
 
-Preset.setName("svelte-add-tailwindcss");
+Preset.setName("svelte-add/tailwindcss");
 
 Preset.extract().withTitle("Adding Tailwind CSS config file");
 
@@ -35,6 +35,7 @@ Preset.edit(["postcss.config.js"]).update((match) => {
 }).withTitle("Adding Tailwind CSS as a PostCSS plugin");
 
 Preset.edit(["src/routes/_global.pcss"]).update((match) => {
+	const marker = "/* Write your global styles here, in PostCSS syntax */";
 	return match.replace(marker, marker + globalCSS);
 }).withTitle("Adding Tailwind directives to the global PostCSS file");
 
