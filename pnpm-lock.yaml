@@ -131,7 +131,7 @@ packages:
       detect-indent: 6.0.0
       enquirer: 2.3.6
       envfile: 6.14.0
-      esbuild: 0.8.27
+      esbuild: 0.8.31
       execa: 4.1.0
       fast-glob: 3.2.4
       fs-extra: 9.0.1
@@ -143,7 +143,7 @@ packages:
       simple-git: 2.31.0
       tmp: 0.2.1
       ts-bus: 2.3.1
-      tslib: 2.0.3
+      tslib: 2.1.0
       unset-value: 1.0.0
     dev: true
     engines:
@@ -359,12 +359,12 @@ packages:
     dev: true
     resolution:
       integrity: sha512-7dFHNmqeFSEt2ZBsCriorKnn3Z2pj+fd9kmI6QoWw4//DL+icEBfc0U7qJCisqrTsKTjw4fNFy2pW9OqStD84g==
-  /esbuild/0.8.27:
+  /esbuild/0.8.31:
     dev: true
     hasBin: true
     requiresBuild: true
     resolution:
-      integrity: sha512-cY2i08EHYHNg0o748J+X0yBTcCO7DIZSxLWJ/6OymmML0Y2X6qkINfZcoiq5GE6EcLIfwyaZpI60JY6iBJWj5w==
+      integrity: sha512-7EIU0VdUxltwivjVezX3HgeNzeIVR1snkrAo57WdUnuBMykdzin5rTrxwCDM6xQqj0RL/HjOEm3wFr2ijHKeaA==
   /escape-string-regexp/1.0.5:
     dev: true
     engines:
@@ -879,10 +879,10 @@ packages:
       react: ^16.8.6
     resolution:
       integrity: sha512-ZoiVKzctxeJvQ0ZB7Fc/wpbEEA5NEjdZWebisXk8raFfEFigDmwl1fKTcr+jNRfEcwFl1QJ4oiirxGR0YnPq1w==
-  /tslib/2.0.3:
+  /tslib/2.1.0:
     dev: true
     resolution:
-      integrity: sha512-uZtkfKblCEQtZKBF6EBXVZeQNl82yqtDQdv+eck8u7tdPxjLu2/lp5/uPW+um2tpuxINHWy3GhiccY7QgEaVHQ==
+      integrity: sha512-hcVC3wYEziELGGmEEXue7D75zbwIIVUMWAVbHItGPx0ziyXxrOMQx4rQEVEV45Ut/1IotuEvwqPopzIOkDMf0A==
   /type-fest/0.11.0:
     dev: true
     engines:
