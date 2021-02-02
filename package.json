@@ -21,6 +21,6 @@
     "homepage": "https://github.com/svelte-add/tailwindcss",
     "preset": "preset.ts",
     "devDependencies": {
-        "apply": "^0.2.12"
+        "apply": "^0.2.13"
     }
 }
