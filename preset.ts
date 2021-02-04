@@ -7,7 +7,7 @@ const globalCSS = `@tailwind base;
 const addTailwind = (otherPlugins) => `plugins: [
 		// Some plugins, like postcss-nested, need to run before Tailwind
 		
-		tailwindcss(),
+		tailwindcss("./tailwind.config.cjs"),
 		
 		// But others, like autoprefixer, need to run after
 
@@ -24,9 +24,9 @@ Preset.editJson("package.json").merge({
 	},
 }).withTitle("Adding needed dependencies");
 
-Preset.edit(["postcss.config.js"]).update((match) => {
+Preset.edit(["postcss.config.cjs"]).update((match) => {
 	let result = match;
-	result = `const tailwindcss = require` + `("tailwindcss");\n${result}`;
+	result = `const tailwindcss = require("tailwindcss");\n${result}`;
 	
 	const matchPlugins = /plugins:[\s\n]\[[\s\n]*((?:.|\n)+)[\s\n]*\]/m;
 	result = result.replace(matchPlugins, (_match, otherPlugins) => addTailwind(otherPlugins));
