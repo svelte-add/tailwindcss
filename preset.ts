@@ -79,7 +79,6 @@ Preset.edit(["src/components/Counter.svelte"]).update((match) => {
 	result = result.replace(`border: 2px solid rgba(255, 62, 0, 0)`, `@apply border-2 border-transparent`);
 	result = result.replace(`outline: none`, `@apply outline-none`);
 	result = result.replace(`width: 200px`, `@apply w-48`);
-	result = result.replace(`font-variant-numeric: tabular-nums`, `@apply tabular-nums`);
 
 	result = result.replace(`border: 2px solid #ff3e00`, `@apply border-opacity-100`);
 
