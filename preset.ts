@@ -7,7 +7,7 @@ const globalCSS = `@tailwind base;
 const addTailwind = (otherPlugins) => `plugins: [
 		// Some plugins, like postcss-nested, need to run before Tailwind
 		
-		tailwindcss("./tailwind.config.cjs"),
+		tailwindcss,
 		
 		// But others, like autoprefixer, need to run after
 
@@ -20,7 +20,7 @@ Preset.extract().withTitle("Adding Tailwind CSS config file");
 
 Preset.editJson("package.json").merge({
 	devDependencies: {
-		"tailwindcss": "^2.0.2",
+		"tailwindcss": "^2.0.3",
 	},
 }).withTitle("Adding needed dependencies");
 
