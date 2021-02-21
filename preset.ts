@@ -7,7 +7,7 @@ const globalCSS = `@tailwind base;
 const addTailwind = (otherPlugins) => `plugins: [
 		// Some plugins, like postcss-nested, need to run before Tailwind
 		
-		tailwindcss,
+		tailwindcss("./tailwind.config.cjs"),
 		
 		// But others, like autoprefixer, need to run after
 
