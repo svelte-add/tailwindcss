@@ -28,7 +28,7 @@ Preset.edit(["postcss.config.cjs"]).update((match) => {
 	let result = match;
 	result = `const tailwindcss = require("tailwindcss");\n${result}`;
 	
-	const matchPlugins = /plugins:[\s\n]\[[\s\n]*((?:.|\n)+)[\s\n]*\]/m;
+	const matchPlugins = /plugins:[\s\r\n]\[[\s\r\n]*((?:.|\r?\n)+)[\s\r\n]*\]/m;
 	result = result.replace(matchPlugins, (_match, otherPlugins) => addTailwind(otherPlugins));
 	
 	return result;
