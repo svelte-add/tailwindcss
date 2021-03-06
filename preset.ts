@@ -16,6 +16,11 @@ const addTailwind = (otherPlugins) => `plugins: [
 
 Preset.setName("svelte-add/tailwindcss");
 
+const VITE = "vite";
+const SNOWPACK = "snowpack";
+const BUILD_TOOL = "buildTool";
+Preset.option(BUILD_TOOL, VITE);
+
 Preset.extract().withTitle("Adding Tailwind CSS config file");
 
 Preset.editJson("package.json").merge({
@@ -34,10 +39,14 @@ Preset.edit(["postcss.config.cjs"]).update((match) => {
 	return result;
 }).withTitle("Adding Tailwind CSS as a PostCSS plugin");
 
-Preset.edit(["src/routes/_global.pcss"]).update((match) => {
-	const marker = "/* Write your global styles here, in PostCSS syntax */";
-	return match.replace(marker, `${marker}\n${globalCSS}`);
-}).withTitle("Adding Tailwind directives to the global PostCSS file");
+Preset.group((preset) => {
+	const MARKER = "/* Write your global styles here, in PostCSS syntax */";
+
+	const replacer = (match) => match.replace(MARKER, `${MARKER}\n${globalCSS}`);
+
+	preset.edit(["src/routes/_global.pcss"]).update(replacer).ifOptionEquals(BUILD_TOOL, SNOWPACK);
+	preset.edit(["src/global.css"]).update(replacer).ifOptionEquals(BUILD_TOOL, VITE);
+}).withTitle("Adding Tailwind directives to the global PostCSS stylesheet");
 
 Preset.edit(["src/routes/index.svelte"]).update((match) => {
 	let result = match;
