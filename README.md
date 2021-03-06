@@ -7,8 +7,6 @@ This is an **experimental** command to run to add Tailwind CSS to your SvelteKit
 You must start with a fresh copy of the official SvelteKit template, which is currently created by running this command:
 ```sh
 npm init svelte@next
-# By the way, please listen to its warnings that SvelteKit is an alpha project
-# https://svelte.dev/blog/whats-the-deal-with-sveltekit#When_can_I_start_using_it
 ```
 
 Since Tailwind CSS is a PostCSS plugin, run this command in your project directory to [set up PostCSS for Svelte](https://github.com/svelte-add/postcss):
@@ -21,15 +19,10 @@ Finally, run this command in your project directory to set up Tailwind CSS:
 npx apply svelte-add/tailwindcss # --no-ssh
 ```
 
-Then ensure your dependencies are up to date:
-```sh
-pnpm update  # If you don't have pnpm, just get it already (and I don't know the npm equivalent of this command)
-```
-
 After the preset runs,
 * You can use Tailwind utility classes like `bg-blue-700` in the markup (components, routes, `app.html`).
 
-* You can use [Tailwind directives like `@apply` and `@screen` or use the `theme` function](https://tailwindcss.com/docs/functions-and-directives) in Svelte `style` blocks or the `src/routes/_global.pcss` file.
+* You can use [Tailwind directives like `@apply` and `@screen` or use the `theme` function](https://tailwindcss.com/docs/functions-and-directives) in Svelte `style` blocks or the `src/global.css` file.
 
 * Your Tailwind CSS will be purged for production builds.
 
