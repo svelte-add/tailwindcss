@@ -16,6 +16,9 @@ const addTailwind = (otherPlugins) => `plugins: [
 
 Preset.setName("svelte-add/tailwindcss");
 
+const JIT = "jit";
+Preset.option(JIT, false);
+
 const VITE = "vite";
 const SNOWPACK = "snowpack";
 const BUILD_TOOL = "buildTool";
@@ -23,15 +26,24 @@ Preset.option(BUILD_TOOL, VITE);
 
 Preset.extract().withTitle("Adding Tailwind CSS config file");
 
-Preset.editJson("package.json").merge({
-	devDependencies: {
-		"tailwindcss": "^2.0.3",
-	},
+Preset.group((preset) => {
+	preset.editJson("package.json").merge({
+		devDependencies: {
+			"tailwindcss": "^2.0.3",
+		},
+	});
+
+	preset.editJson("package.json").merge({
+		devDependencies: {
+			"@tailwindcss/jit": "^0.1.1",
+		},
+	}).ifOption(JIT);
 }).withTitle("Adding needed dependencies");
 
-Preset.edit(["postcss.config.cjs"]).update((match) => {
+Preset.edit(["postcss.config.cjs"]).update((match, preset) => {
 	let result = match;
-	result = `const tailwindcss = require("tailwindcss");\n${result}`;
+	const tailwindcss = preset.options[JIT] ? "@tailwindcss/jit" : "tailwindcss";
+	result = `const tailwindcss = require("${tailwindcss}");\n${result}`;
 	
 	const matchPlugins = /plugins:[\s\r\n]\[[\s\r\n]*((?:.|\r?\n)+)[\s\r\n]*\]/m;
 	result = result.replace(matchPlugins, (_match, otherPlugins) => addTailwind(otherPlugins));
