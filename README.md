@@ -11,12 +11,12 @@ npm init svelte@next
 
 Since Tailwind CSS is a PostCSS plugin, run this command in your project directory to [set up PostCSS for Svelte](https://github.com/svelte-add/postcss):
 ```sh
-npx apply svelte-add/postcss # --no-ssh
+npx svelte-add postcss
 ```
 
 Finally, run this command in your project directory to set up Tailwind CSS:
 ```sh
-npx apply svelte-add/tailwindcss # --no-ssh
+npx svelte-add tailwindcss
 ```
 
 After the preset runs,
