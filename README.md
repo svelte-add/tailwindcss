@@ -16,7 +16,7 @@ npx svelte-add postcss
 
 Finally, run this command in your project directory to set up Tailwind CSS:
 ```sh
-npx svelte-add tailwindcss
+npx svelte-add tailwindcss # --jit
 ```
 
 After the preset runs,
