@@ -9,12 +9,7 @@ You must start with a fresh copy of the official SvelteKit template, which is cu
 npm init svelte@next
 ```
 
-Since Tailwind CSS is a PostCSS plugin, run this command in your project directory to [set up PostCSS for Svelte](https://github.com/svelte-add/postcss):
-```sh
-npx svelte-add postcss
-```
-
-Finally, run this command in your project directory to set up Tailwind CSS:
+Once that is set up, run this command in your project directory to set up Tailwind CSS:
 ```sh
 npx svelte-add tailwindcss # --jit
 ```

@@ -1,4 +1,4 @@
-import { Preset } from "apply";
+import { Preset, color } from "apply";
 
 const globalCSS = `@tailwind base;
 @tailwind components;
@@ -23,6 +23,14 @@ const VITE = "vite";
 const SNOWPACK = "snowpack";
 const BUILD_TOOL = "buildTool";
 Preset.option(BUILD_TOOL, VITE);
+
+const NEEDS_POSTCSS = "needsPostcss";
+Preset.hook((preset) => { preset.context[NEEDS_POSTCSS] = true }).withoutTitle();
+Preset.edit(["postcss.config.cjs"]).update((match, preset) => {
+	preset.context[NEEDS_POSTCSS] = false;
+	return match;
+}).withoutTitle();
+Preset.apply("svelte-add/postcss").with((preset) => [...preset.args, "--build-tool", preset.options[BUILD_TOOL], "--no-ssh"]).if((preset) => preset.context[NEEDS_POSTCSS]).withTitle("Adding PostCSS because it's missing from this project");
 
 Preset.extract().withTitle("Adding Tailwind CSS config file");
 
@@ -108,4 +116,4 @@ Preset.edit(["src/components/Counter.svelte"]).update((match) => {
 	return result;
 }).withTitle("Making src/components/Counter.svelte use Tailwind's @apply as an example");
 
-Preset.installDependencies().ifUserApproves();
+Preset.instruct(`Run ${color.magenta("npm install")}, ${color.magenta("pnpm install")}, or ${color.magenta("yarn")} to install dependencies`);
