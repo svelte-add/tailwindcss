@@ -19,21 +19,16 @@ Preset.setName("svelte-add/tailwindcss");
 const JIT = "jit";
 Preset.option(JIT, false);
 
-const VITE = "vite";
-const SNOWPACK = "snowpack";
-const BUILD_TOOL = "buildTool";
-Preset.option(BUILD_TOOL, VITE);
-
 const EXCLUDE_EXAMPLES = "excludeExamples"
 Preset.option(EXCLUDE_EXAMPLES, false);
 
 const NEEDS_POSTCSS = "needsPostcss";
 Preset.hook((preset) => { preset.context[NEEDS_POSTCSS] = true }).withoutTitle();
-Preset.edit(["postcss.config.cjs"]).update((match, preset) => {
+Preset.edit("postcss.config.cjs").update((match, preset) => {
 	preset.context[NEEDS_POSTCSS] = false;
 	return match;
 }).withoutTitle();
-Preset.apply("svelte-add/postcss").with((preset) => [...preset.args, "--build-tool", preset.options[BUILD_TOOL], "--exclude-examples", preset.options[EXCLUDE_EXAMPLES], "--no-ssh"]).if((preset) => preset.context[NEEDS_POSTCSS]).withTitle("Adding PostCSS because it's missing from this project");
+Preset.apply("svelte-add/postcss").with((preset) => [...preset.args, "--exclude-examples", preset.options[EXCLUDE_EXAMPLES], "--no-ssh"]).if((preset) => preset.context[NEEDS_POSTCSS]).withTitle("Adding PostCSS because it's missing from this project");
 
 Preset.extract().withTitle("Adding Tailwind CSS config file");
 
@@ -51,7 +46,7 @@ Preset.group((preset) => {
 	}).ifOption(JIT);
 }).withTitle("Adding needed dependencies");
 
-Preset.edit(["postcss.config.cjs"]).update((match, preset) => {
+Preset.edit("postcss.config.cjs").update((match, preset) => {
 	let result = match;
 	const tailwindcss = preset.options[JIT] ? "@tailwindcss/jit" : "tailwindcss";
 	result = `const tailwindcss = require("${tailwindcss}");\n${result}`;
@@ -67,11 +62,10 @@ Preset.group((preset) => {
 
 	const replacer = (match) => match.replace(MARKER, `${MARKER}\n${globalCSS}`);
 
-	preset.edit(["src/routes/_global.pcss"]).update(replacer).ifOptionEquals(BUILD_TOOL, SNOWPACK);
-	preset.edit(["src/global.css"]).update(replacer).ifOptionEquals(BUILD_TOOL, VITE);
+	preset.edit(["src/global.css", "src/routes/_global.pcss"]).update(replacer);
 }).withTitle("Adding Tailwind directives to the global PostCSS stylesheet");
 
-Preset.edit(["src/routes/index.svelte"]).update((match) => {
+Preset.edit(["src/routes/index.svelte", "src/App.svelte"]).update((match) => {
 	let result = match;
 	result = result.replace(`<a href`, `<a class="text-blue-600 underline" href`);
 	
@@ -102,7 +96,7 @@ Preset.edit(["src/routes/index.svelte"]).update((match) => {
 	return result;
 }).withTitle("Making src/routes/index.svelte use Tailwind's @apply as an example").ifNotOption(EXCLUDE_EXAMPLES);
 
-Preset.edit(["src/lib/Counter.svelte"]).update((match) => {
+Preset.edit("src/lib/Counter.svelte").update((match) => {
 	let result = match;
 	result = result.replace(`padding: 1em 2em`, `/* Tailwind's creator recommends against @apply.\n\t\tThis is all just proof that it works in your Svelte style blocks. */\n\t\t@apply py-4 px-8`);
 	result = result.replace(`color: #ff3e00`, `@apply text-red-500`);
