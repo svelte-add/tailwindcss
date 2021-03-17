@@ -24,13 +24,16 @@ const SNOWPACK = "snowpack";
 const BUILD_TOOL = "buildTool";
 Preset.option(BUILD_TOOL, VITE);
 
+const EXCLUDE_EXAMPLES = "excludeExamples"
+Preset.option(EXCLUDE_EXAMPLES, false);
+
 const NEEDS_POSTCSS = "needsPostcss";
 Preset.hook((preset) => { preset.context[NEEDS_POSTCSS] = true }).withoutTitle();
 Preset.edit(["postcss.config.cjs"]).update((match, preset) => {
 	preset.context[NEEDS_POSTCSS] = false;
 	return match;
 }).withoutTitle();
-Preset.apply("svelte-add/postcss").with((preset) => [...preset.args, "--build-tool", preset.options[BUILD_TOOL], "--no-ssh"]).if((preset) => preset.context[NEEDS_POSTCSS]).withTitle("Adding PostCSS because it's missing from this project");
+Preset.apply("svelte-add/postcss").with((preset) => [...preset.args, "--build-tool", preset.options[BUILD_TOOL], "--exclude-examples", preset.options[EXCLUDE_EXAMPLES], "--no-ssh"]).if((preset) => preset.context[NEEDS_POSTCSS]).withTitle("Adding PostCSS because it's missing from this project");
 
 Preset.extract().withTitle("Adding Tailwind CSS config file");
 
@@ -97,9 +100,9 @@ Preset.edit(["src/routes/index.svelte"]).update((match) => {
 	result = result.replace(`max-width: none`, `@apply max-w-none`);
 
 	return result;
-}).withTitle("Making src/routes/index.svelte use Tailwind's @apply as an example");
+}).withTitle("Making src/routes/index.svelte use Tailwind's @apply as an example").ifNotOption(EXCLUDE_EXAMPLES);
 
-Preset.edit(["src/components/Counter.svelte"]).update((match) => {
+Preset.edit(["src/lib/Counter.svelte"]).update((match) => {
 	let result = match;
 	result = result.replace(`padding: 1em 2em`, `/* Tailwind's creator recommends against @apply.\n\t\tThis is all just proof that it works in your Svelte style blocks. */\n\t\t@apply py-4 px-8`);
 	result = result.replace(`color: #ff3e00`, `@apply text-red-500`);
@@ -114,6 +117,6 @@ Preset.edit(["src/components/Counter.svelte"]).update((match) => {
 	result = result.replace(`background-color: rgba(255, 62, 0, 0.2)`, `@apply bg-red-500 bg-opacity-20`);
 
 	return result;
-}).withTitle("Making src/components/Counter.svelte use Tailwind's @apply as an example");
+}).withTitle("Making src/lib/Counter.svelte use Tailwind's @apply as an example").ifNotOption(EXCLUDE_EXAMPLES);
 
 Preset.instruct(`Run ${color.magenta("npm install")}, ${color.magenta("pnpm install")}, or ${color.magenta("yarn")} to install dependencies`);
