@@ -1,7 +1,7 @@
 <h1 align="center">💨 Add Tailwind CSS to Svelte</h1>
 
 ## ❓ What is this?
-This is an **experimental** command to run to add Tailwind CSS to your SvelteKit project.
+This is an **experimental** command to run to add Tailwind CSS to your SvelteKit project or Vite-powered Svelte app.
 
 ## 🧰 Adding to SvelteKit
 You must start with a fresh copy of the official SvelteKit template, which is currently created by running this command:
