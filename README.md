@@ -11,7 +11,7 @@ npm init svelte@next
 
 Once that is set up, run this command in your project directory to set up Tailwind CSS:
 ```sh
-npx svelte-add tailwindcss
+npx svelte-add tailwindcss  # --jit
 ```
 
 ## ⚡️ Adding to Vite
@@ -22,7 +22,7 @@ npm init @vitejs/app  # Choose svelte or svelte-ts
 
 Once that is set up, run this command in your project directory to set up Tailwind CSS:
 ```sh
-npx svelte-add tailwindcss
+npx svelte-add tailwindcss  # --jit
 ```
 
 ## 🛠 Usage
