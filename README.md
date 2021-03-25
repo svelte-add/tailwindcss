@@ -31,6 +31,8 @@ After the preset runs,
 
 * You can use [Tailwind directives like `@apply` and `@screen` or use the `theme` function](https://tailwindcss.com/docs/functions-and-directives) in Svelte `style` blocks or the `src/global.css` file.
 
+* You can [configure Tailwind CSS](https://tailwindcss.com/docs/configuration) in the `tailwind.config.cjs` file.
+
 * Your Tailwind CSS will be purged for production builds.
 
 * You can apply *another* [Svelte Adder](https://github.com/svelte-add/svelte-adders) to your project for more functionality.
