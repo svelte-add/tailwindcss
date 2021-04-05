@@ -14,6 +14,50 @@ const addTailwind = (otherPlugins) => `plugins: [
 		${otherPlugins}]`;
 
 
+
+const tailwindAotConfig = `const { tailwindExtractor } = require("tailwindcss/lib/lib/purgeUnusedStyles");
+
+module.exports = {
+	mode: "aot",
+	purge: {
+		content: [
+			"./src/**/*.{html,js,svelte,ts}",
+		],
+		options: {
+			defaultExtractor: (content) => [
+				// If this stops working, please open an issue at https://github.com/svelte-add/tailwindcss/issues rather than bothering Tailwind Labs about it
+				...tailwindExtractor(content),
+				// Match Svelte class: directives (https://github.com/tailwindlabs/tailwindcss/discussions/1731)
+				...[...content.matchAll(/(?:class:)*([\w\d-/:%.]+)/gm)].map(([_match, group, ..._rest]) => group),
+			],
+			keyframes: true,
+		},
+	},
+	theme: {
+		extend: {},
+	},
+	variants: {
+		extend: {},
+	},
+	plugins: [],
+};
+`;
+
+const tailwindJitConfig = `module.exports = {
+	mode: "jit",
+	purge: [
+		"./src/**/*.{html,js,svelte,ts}",
+	],
+	theme: {
+		extend: {},
+	},
+	variants: {
+		extend: {},
+	},
+	plugins: [],
+};
+`;
+
 Preset.setName("svelte-add/tailwindcss");
 
 const JIT = "jit";
@@ -30,25 +74,24 @@ Preset.edit("postcss.config.cjs").update((match, preset) => {
 }).withoutTitle();
 Preset.apply("svelte-add/postcss").with((preset) => [...preset.args, "--exclude-examples", preset.options[EXCLUDE_EXAMPLES], "--no-ssh"]).if((preset) => preset.context[NEEDS_POSTCSS]).withTitle("Adding PostCSS because it's missing from this project");
 
-Preset.extract().withTitle("Adding Tailwind CSS config file");
-
 Preset.group((preset) => {
-	preset.editJson("package.json").merge({
-		devDependencies: {
-			"tailwindcss": "^2.0.3",
-		},
-	});
+	preset.extract("tailwind.config.cjs");
+	preset.edit("tailwind.config.cjs").update((_match, preset) => {
+		if (preset.options[JIT]) return tailwindJitConfig;
 
-	preset.editJson("package.json").merge({
-		devDependencies: {
-			"@tailwindcss/jit": "^0.1.1",
-		},
-	}).ifOption(JIT);
+		return tailwindAotConfig;
+	});
+}).withTitle("Adding Tailwind CSS config file");
+
+Preset.editJson("package.json").merge({
+	devDependencies: {
+		"tailwindcss": "^2.1.0",
+	},
 }).withTitle("Adding needed dependencies");
 
-Preset.edit("postcss.config.cjs").update((match, preset) => {
+Preset.edit("postcss.config.cjs").update((match, _preset) => {
 	let result = match;
-	const tailwindcss = preset.options[JIT] ? "@tailwindcss/jit" : "tailwindcss";
+	const tailwindcss = "tailwindcss";
 	result = `const tailwindcss = require("${tailwindcss}");\n${result}`;
 	
 	const matchPlugins = /plugins:[\s\r\n]\[[\s\r\n]*((?:.|\r?\n)+)[\s\r\n]*\]/m;
@@ -60,16 +103,20 @@ Preset.edit("postcss.config.cjs").update((match, preset) => {
 Preset.group((preset) => {
 	const MARKER = "/* Write your global styles here, in PostCSS syntax */";
 
-	const replacer = (match) => match.replace(MARKER, `${MARKER}\n${globalCSS}`);
-
-	preset.edit(["src/global.css", "src/routes/_global.pcss"]).update(replacer);
+	const matchRoot = /:root[\s\r\n]\{[\s\r\n]*((?:.|\r?\n)+)[\s\r\n]*\}/m;
+	const replacer = (match) => {
+		let result = match;
+		result = result.replace(MARKER, `${MARKER}\n${globalCSS}`);
+		result = result.replace(matchRoot, "");
+		return result;
+	}
+	
+	preset.edit(["src/app.postcss", "src/global.css", "src/routes/_global.pcss"]).update(replacer);
 }).withTitle("Adding Tailwind directives to the global PostCSS stylesheet");
 
 Preset.edit(["src/routes/index.svelte", "src/App.svelte"]).update((match) => {
 	let result = match;
 	result = result.replace(`<a href`, `<a class="text-blue-600 underline" href`);
-	
-	result = result.replace(`font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif`, `/* Tailwind's creator recommends against @apply.\n\t\tThis is all just proof that it works in your Svelte style blocks. */\n\t\t@apply font-sans`);
 	
 	result = result.replace(`text-align: center`, `@apply text-center`);
 	result = result.replace(`padding: 1em`, `@apply p-4`);
