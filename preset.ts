@@ -98,7 +98,7 @@ Preset.edit(["src/routes/index.svelte", "src/App.svelte"]).update((match) => {
 
 Preset.edit("src/lib/Counter.svelte").update((match) => {
 	let result = match;
-	result = result.replace(`padding: 1em 2em`, `/* Tailwind's creator recommends against @apply.\n\t\tThis is all just proof that it works in your Svelte style blocks. */\n\t\t@apply py-4 px-8`);
+	result = result.replace(`padding: 1em 2em`, `/* Tailwind's creator recommends against @apply.\n\t\tThis is all just proof that it works in your Svelte style blocks.\n\t\tUsing TailwindCSS directly on your components is the most efficient since styles can be reused.\n\t\tUsing @apply is useful if making re-usable components or to keep your template code simpler,\n\t\tbut be aware of the effect on bundle size (duplicated styles). */\n\t\t@apply py-4 px-8`);
 	result = result.replace(`color: #ff3e00`, `@apply text-red-500`);
 	result = result.replace(`background-color: rgba(255, 62, 0, 0.1)`, `@apply bg-red-500 bg-opacity-10`);
 	result = result.replace(`border-radius: 2em`, `@apply rounded-full`);
