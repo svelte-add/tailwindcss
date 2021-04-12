@@ -81,7 +81,7 @@ Preset.group((preset) => {
 
 Preset.editJson("package.json").merge({
 	devDependencies: {
-		"tailwindcss": "^2.1.0",
+		"tailwindcss": "^2.1.1",
 	},
 }).withTitle("Adding needed dependencies");
 
