@@ -113,6 +113,8 @@ Preset.group((preset) => {
 Preset.edit(["src/routes/index.svelte", "src/App.svelte"]).update((match) => {
 	let result = match;
 	result = result.replace(`<a href`, `<a class="text-blue-600 underline" href`);
+
+	result = result.replace(`alt="Svelte Logo"`, `alt="Svelte Logo" class="mx-auto"`);
 	
 	result = result.replace(`text-align: center`, `@apply text-center`);
 	result = result.replace(`padding: 1em`, `@apply p-4`);
