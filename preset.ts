@@ -107,7 +107,7 @@ Preset.group((preset) => {
 		return result;
 	}
 	
-	preset.edit(["src/app.postcss", "src/global.css", "src/routes/_global.pcss"]).update(replacer);
+	preset.edit(["src/app.postcss", "src/global.css", "src/global.postcss", "src/routes/_global.pcss"]).update(replacer);
 }).withTitle("Adding Tailwind directives to the global PostCSS stylesheet");
 
 Preset.edit(["src/routes/index.svelte", "src/App.svelte"]).update((match) => {
