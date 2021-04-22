@@ -31,6 +31,7 @@ module.exports = {
 				...[...content.matchAll(/(?:class:)*([\\w\\d-/:%.]+)/gm)].map(([_match, group, ..._rest]) => group),
 			],
 		},
+		safelist: [/^svelte-[\\d\\w]+$/],
 	},
 	theme: {
 		extend: {},
