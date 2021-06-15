@@ -1,55 +1,25 @@
 <h1 align="center">💨 Add Tailwind CSS to Svelte</h1>
 
-## ❓ What is this?
-This is an **experimental** command to run to add Tailwind CSS to your SvelteKit project or Vite-powered Svelte app.
+This is an adder for `svelte-add`; you should [read its `README`](https://github.com/svelte-add/svelte-add#readme) before continuing here.
 
-## 🧰 Adding to SvelteKit
-You must start with a fresh copy of the official SvelteKit template, which is currently created by running this command:
+## ➕ Adding Tailwind CSS
+This adder's codename is `tailwindcss`, and can be used like so:
 ```sh
-npm init svelte@next
+npx svelte-add tailwindcss
 ```
 
-Once that is set up, run this command in your project directory to set up Tailwind CSS:
-```sh
-npx svelte-add tailwindcss  # --jit
-```
+### 🏞 Supported environments
+This adder supports SvelteKit and Vite-powered Svelte apps (all the environments `svelte-add` currently supports).
 
-## ⚡️ Adding to Vite
-You must start with a fresh copy of the official Vite-powered Svelte app template, which is currently created by running this command:
-```sh
-npm init @vitejs/app  # Choose svelte or svelte-ts
-```
+### ⚙️ Options
+* `jit`: whether or not to use [Tailwind Just-in-Time Mode](https://tailwindcss.com/docs/just-in-time-mode)
 
-Once that is set up, run this command in your project directory to set up Tailwind CSS:
-```sh
-npx svelte-add tailwindcss  # --jit
-```
-
-## 🛠 Usage
-After the preset runs,
+## 🛠 Using Tailwind CSS
+After the adder runs,
 * You can use Tailwind utility classes like `bg-blue-700` in the markup (components, routes, `app.html`).
 
-* You can use [Tailwind directives like `@apply` and `@screen` or use the `theme` function](https://tailwindcss.com/docs/functions-and-directives) in Svelte `style` blocks or the `src/app.postcss` or the `src/global.css` file.
+* You can use [Tailwind directives like `@apply` and `@screen` or use the `theme` function](https://tailwindcss.com/docs/functions-and-directives) in Svelte `style` blocks or the `src/app.postcss` file.
 
 * You can [configure Tailwind](https://tailwindcss.com/docs/configuration) in the `tailwind.config.cjs` file.
 
 * Your Tailwind CSS will be purged for production builds.
-
-* You can apply *another* [Svelte Adder](https://github.com/svelte-add/svelte-adders) to your project for more functionality.
-
-## 😵 Help! I have a question
-[Create an issue](https://github.com/svelte-add/tailwindcss/issues/new) and I'll try to help.
-
-## 😡 Fix! There is something that needs improvement
-[Create an issue](https://github.com/svelte-add/tailwindcss/issues/new) or [pull request](https://github.com/svelte-add/tailwindcss/pulls) and I'll try to fix.
-
-These are new tools, so there are likely to be problems in this project. Thank you for bringing them to my attention or fixing them for me.
-
-## 📄 License
-MIT
-
----
-
-*Repository preview image generated with [GitHub Social Preview](https://social-preview.pqt.dev/)*
-
-_This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
