@@ -15,7 +15,7 @@ const config = {
 		],
 		options: {
 			defaultExtractor: (content) => [
-				// If this stops working, please open an issue at https://github.com/svelte-add/tailwindcss/issues rather than bothering Tailwind Labs about it
+				// If this stops working, please open an issue at https://github.com/svelte-add/svelte-add/issues rather than bothering Tailwind Labs about it
 				...tailwindExtractor(content),
 				// Match Svelte class: directives (https://github.com/tailwindlabs/tailwindcss/discussions/1731)
 				...[...content.matchAll(/(?:class:)*([\\w\\d-/:%.]+)/gm)].map(([_match, group, ..._rest]) => group),
@@ -48,6 +48,13 @@ const tailwindJitConfig = `const config = {
 
 module.exports = config;
 `;
+
+// https://github.com/svelte-add/tailwindcss/issues/59#issuecomment-864424583
+const setTailwindMode = `// Workaround until SvelteKit uses Vite 2.3.8 (and it's confirmed to fix the Tailwind JIT problem)
+const mode = process.env.NODE_ENV;
+const dev = mode === "development";
+process.env.TAILWIND_MODE = dev ? "watch" : "build";
+`
 
 /**
  * @param {import("../../ast-io.js").RecastAST} postcssConfigAst 
@@ -272,7 +279,7 @@ const updateGlobalStylesheet = (postcss) => {
 	return postcss;
 }
 
-/** @type {import("../..").AdderRun<{ jit: boolean }>} */
+/** @type {import("../../index.js").AdderRun<import("./__metadata.js").Options>} */
 export const run = async ({ install, options, updateCss, updateJavaScript }) => {
 	await updateJavaScript({
 		path: tailwindConfigCjsPath,
@@ -302,4 +309,23 @@ export const run = async ({ install, options, updateCss, updateJavaScript }) => 
 	});
 
 	await install({ package: "tailwindcss" });
+
+	// https://github.com/svelte-add/tailwindcss/issues/59
+	if (options.jit) {
+		for (const svelteConfigPath of ["/svelte.config.cjs", "/svelte.config.js"])
+		await updateJavaScript({
+			path: svelteConfigPath,
+			async script({ exists, typeScriptEstree }) {
+				if (!exists) return { exists: false };
+
+				const setTailwindModeAst = newTypeScriptEstreeAst(setTailwindMode);
+
+				typeScriptEstree.program.body.push(...setTailwindModeAst.program.body);
+				
+				return {
+					typeScriptEstree,
+				}
+			}
+		});
+	}
 };
