@@ -12,7 +12,7 @@ npx svelte-add tailwindcss
 This adder supports SvelteKit and Vite-powered Svelte apps (all the environments `svelte-add` currently supports).
 
 ### ⚙️ Options
-* `jit`: whether or not to use [Tailwind Just-in-Time Mode](https://tailwindcss.com/docs/just-in-time-mode)
+* `jit` (default `true`): whether or not to use [Tailwind Just-in-Time Mode](https://tailwindcss.com/docs/just-in-time-mode)
 
 ## 🛠 Using Tailwind CSS
 After the adder runs,
