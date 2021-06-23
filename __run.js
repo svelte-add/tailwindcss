@@ -54,10 +54,10 @@ const setTailwindMode = `// Workaround until SvelteKit uses Vite 2.3.8 (and it's
 const mode = process.env.NODE_ENV;
 const dev = mode === "development";
 process.env.TAILWIND_MODE = dev ? "watch" : "build";
-`
+`;
 
 /**
- * @param {import("../../ast-io.js").RecastAST} postcssConfigAst 
+ * @param {import("../../ast-io.js").RecastAST} postcssConfigAst
  */
 const updatePostcssConfig = (postcssConfigAst) => {
 	const configObject = getConfigObject({
@@ -72,7 +72,7 @@ const updatePostcssConfig = (postcssConfigAst) => {
 		if (property.type !== "Property") continue;
 		if (property.key.type !== "Identifier") continue;
 		if (property.key.name !== "plugins") continue;
-		
+
 		pluginsConfig = property;
 	}
 
@@ -91,8 +91,8 @@ const updatePostcssConfig = (postcssConfigAst) => {
 			value: {
 				type: "ArrayExpression",
 				elements: [],
-			}
-		}
+			},
+		};
 		configObject.properties.push(pluginsConfig);
 	}
 
@@ -115,20 +115,19 @@ const updatePostcssConfig = (postcssConfigAst) => {
 			if (node.type !== "VariableDeclarator") return;
 
 			/** @type {import("estree").VariableDeclarator} */
-			const declarator = (node);
-			
+			// prettier-ignore
+			const declarator = (node)
+
 			if (declarator.id.type !== "Identifier") return;
 			const identifier = declarator.id;
-			
+
 			if (!declarator.init) return;
 			if (declarator.init.type !== "CallExpression") return;
 			const callExpression = declarator.init;
 
 			if (callExpression.callee.type !== "Identifier") return;
-			/** @type {import("estree").Identifier} */
-			const callee = (callExpression.callee);
 
-			if (callee.name !== "require") return;
+			if (callExpression.callee.name !== "require") return;
 
 			if (callExpression.arguments[0].type !== "Literal") return;
 			const requireArgValue = callExpression.arguments[0].value;
@@ -137,14 +136,13 @@ const updatePostcssConfig = (postcssConfigAst) => {
 			imports[identifier.name] = requireArgValue;
 
 			if (requireArgValue === "tailwindcss") tailwindcssImportedAs = identifier.name;
-		}
-	})
-
+		},
+	});
 
 	// Add a tailwindcss import if it's not there
 	if (!tailwindcssImportedAs) {
 		tailwindcssImportedAs = "tailwindcss";
-		
+
 		/** @type {import("estree").VariableDeclaration} */
 		const requireTailwindcssAst = {
 			type: "VariableDeclaration",
@@ -170,14 +168,13 @@ const updatePostcssConfig = (postcssConfigAst) => {
 						},
 						optional: false,
 					},
-				}
+				},
 			],
 			kind: "const",
 		};
 
 		postcssConfigAst.program.body.unshift(requireTailwindcssAst);
 	}
-
 
 	for (const [index, plugin] of pluginsList.entries()) {
 		if (!plugin) continue;
@@ -205,7 +202,6 @@ const updatePostcssConfig = (postcssConfigAst) => {
 
 	if (minIndex > maxIndex) throw new Error("cannot find place to slot `tailwindcss()` as a plugin in the PostCSS config");
 
-
 	// We have a range of acceptable values
 	// Let's use the latest slot because it's probably the most likely to work correctly
 	pluginsList.splice(maxIndex, 0, {
@@ -215,16 +211,20 @@ const updatePostcssConfig = (postcssConfigAst) => {
 		value: `Some plugins, like ${goAfter[0]}, need to run before Tailwind`,
 	});
 
-	pluginsList.splice(maxIndex + 1, 0, /** @type {import("estree").CallExpression} */ {
-		type: "CallExpression",
-		// @ts-ignore - I am not sure why this is typed wrongly (?)
-		arguments: [],
-		callee: {
-			type: "Identifier",
-			name: tailwindcssImportedAs,
-		},
-		optional: false,
-	});
+	pluginsList.splice(
+		maxIndex + 1,
+		0,
+		/** @type {import("estree").CallExpression} */ {
+			type: "CallExpression",
+			// @ts-ignore - I am not sure why this is typed wrongly (?)
+			arguments: [],
+			callee: {
+				type: "Identifier",
+				name: tailwindcssImportedAs,
+			},
+			optional: false,
+		}
+	);
 
 	pluginsList.splice(maxIndex + 2, 0, {
 		// @ts-expect-error - Force accept the comment
@@ -233,12 +233,11 @@ const updatePostcssConfig = (postcssConfigAst) => {
 		value: `But others, like ${goBefore[0]}, need to run after`,
 	});
 
-
 	return postcssConfigAst;
-}
+};
 
 /**
- * 
+ *
  * @param {import("../../ast-io.js").PostCSSAst} postcss
  * @returns {import("../../ast-io.js").PostCSSAst}
  */
@@ -277,7 +276,7 @@ const updateGlobalStylesheet = (postcss) => {
 	}
 
 	return postcss;
-}
+};
 
 /** @type {import("../../index.js").AdderRun<import("./__metadata.js").Options>} */
 export const run = async ({ install, options, updateCss, updateJavaScript }) => {
@@ -286,8 +285,8 @@ export const run = async ({ install, options, updateCss, updateJavaScript }) => 
 		async script() {
 			return {
 				typeScriptEstree: newTypeScriptEstreeAst(options.jit ? tailwindJitConfig : tailwindAotConfig),
-			}
-		}
+			};
+		},
 	});
 
 	await updateJavaScript({
@@ -295,8 +294,8 @@ export const run = async ({ install, options, updateCss, updateJavaScript }) => 
 		async script({ typeScriptEstree }) {
 			return {
 				typeScriptEstree: updatePostcssConfig(typeScriptEstree),
-			}
-		}
+			};
+		},
 	});
 
 	await updateCss({
@@ -304,8 +303,8 @@ export const run = async ({ install, options, updateCss, updateJavaScript }) => 
 		async style({ postcss }) {
 			return {
 				postcss: updateGlobalStylesheet(postcss),
-			}
-		}
+			};
+		},
 	});
 
 	await install({ package: "tailwindcss" });
@@ -313,19 +312,19 @@ export const run = async ({ install, options, updateCss, updateJavaScript }) => 
 	// https://github.com/svelte-add/tailwindcss/issues/59
 	if (options.jit) {
 		for (const svelteConfigPath of ["/svelte.config.cjs", "/svelte.config.js"])
-		await updateJavaScript({
-			path: svelteConfigPath,
-			async script({ exists, typeScriptEstree }) {
-				if (!exists) return { exists: false };
+			await updateJavaScript({
+				path: svelteConfigPath,
+				async script({ exists, typeScriptEstree }) {
+					if (!exists) return { exists: false };
 
-				const setTailwindModeAst = newTypeScriptEstreeAst(setTailwindMode);
+					const setTailwindModeAst = newTypeScriptEstreeAst(setTailwindMode);
 
-				typeScriptEstree.program.body.push(...setTailwindModeAst.program.body);
-				
-				return {
-					typeScriptEstree,
-				}
-			}
-		});
+					typeScriptEstree.program.body.push(...setTailwindModeAst.program.body);
+
+					return {
+						typeScriptEstree,
+					};
+				},
+			});
 	}
 };
