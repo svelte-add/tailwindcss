@@ -1,7 +1,7 @@
 import { walk } from "estree-walker";
 import { AtRule } from "postcss";
 import { newTypeScriptEstreeAst } from "../../ast-io.js";
-import { getConfigObject } from "../../ast-tools.js";
+import { addImport, findImport, getConfigObject } from "../../ast-tools.js";
 import { globalStylesheetPostcssPath, postcssConfigCjsPath } from "../postcss/stuff.js";
 import { tailwindConfigCjsPath } from "./stuff.js";
 
@@ -105,8 +105,12 @@ const updatePostcssConfig = (postcssConfigAst) => {
 	const goBefore = ["autoprefixer", "cssnano"];
 	let maxIndex = pluginsConfig.value.elements.length;
 
-	/** @type {string | undefined} */
-	let tailwindcssImportedAs;
+	// Find `tailwindcss` import or add it if it's not there
+	let tailwindcssImportedAs = findImport({ cjs: true, package: "tailwindcss", typeScriptEstree: postcssConfigAst }).require;
+	if (!tailwindcssImportedAs) {
+		tailwindcssImportedAs = "tailwindcss";
+		addImport({ cjs: true, package: "tailwindcss", require: tailwindcssImportedAs, typeScriptEstree: postcssConfigAst });
+	}
 
 	/** @type {Record<string, string>} Identifier name -> imported package */
 	const imports = {};
@@ -134,47 +138,8 @@ const updatePostcssConfig = (postcssConfigAst) => {
 
 			if (typeof requireArgValue !== "string") return;
 			imports[identifier.name] = requireArgValue;
-
-			if (requireArgValue === "tailwindcss") tailwindcssImportedAs = identifier.name;
 		},
 	});
-
-	// Add a tailwindcss import if it's not there
-	if (!tailwindcssImportedAs) {
-		tailwindcssImportedAs = "tailwindcss";
-
-		/** @type {import("estree").VariableDeclaration} */
-		const requireTailwindcssAst = {
-			type: "VariableDeclaration",
-			declarations: [
-				{
-					type: "VariableDeclarator",
-					id: {
-						type: "Identifier",
-						name: tailwindcssImportedAs,
-					},
-					init: {
-						type: "CallExpression",
-						// @ts-ignore - I am not sure why this is typed wrongly (?)
-						arguments: [
-							{
-								type: "Literal",
-								value: "tailwindcss",
-							},
-						],
-						callee: {
-							type: "Identifier",
-							name: "require",
-						},
-						optional: false,
-					},
-				},
-			],
-			kind: "const",
-		};
-
-		postcssConfigAst.program.body.unshift(requireTailwindcssAst);
-	}
 
 	for (const [index, plugin] of pluginsList.entries()) {
 		if (!plugin) continue;
