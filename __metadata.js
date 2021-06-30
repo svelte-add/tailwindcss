@@ -1,3 +1,5 @@
+export const name = "Tailwind CSS";
+
 /** @typedef {{ jit: boolean }} Options */
 
 /** @type {import("../..").AdderOptions<Options>} */
