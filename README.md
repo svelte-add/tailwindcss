@@ -7,7 +7,7 @@ This is an adder for `svelte-add`; you should [read its `README`](https://github
 This adder's codename is `tailwindcss`, and can be used like so:
 
 ```sh
-npx svelte-add tailwindcss
+npx svelte-add@latest tailwindcss
 ```
 
 ### 🏞 Supported environments
