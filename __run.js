@@ -49,13 +49,6 @@ const tailwindJitConfig = `const config = {
 module.exports = config;
 `;
 
-// https://github.com/svelte-add/tailwindcss/issues/59#issuecomment-864424583
-const setTailwindMode = `// Workaround until SvelteKit uses Vite 2.3.8 (and it's confirmed to fix the Tailwind JIT problem)
-const mode = process.env.NODE_ENV;
-const dev = mode === "development";
-process.env.TAILWIND_MODE = dev ? "watch" : "build";
-`;
-
 /**
  * @param {import("../../ast-io.js").RecastAST} postcssConfigAst
  */
@@ -273,23 +266,4 @@ export const run = async ({ install, options, updateCss, updateJavaScript }) => 
 	});
 
 	await install({ package: "tailwindcss" });
-
-	// https://github.com/svelte-add/tailwindcss/issues/59
-	if (options.jit) {
-		for (const svelteConfigPath of ["/svelte.config.cjs", "/svelte.config.js"])
-			await updateJavaScript({
-				path: svelteConfigPath,
-				async script({ exists, typeScriptEstree }) {
-					if (!exists) return { exists: false };
-
-					const setTailwindModeAst = newTypeScriptEstreeAst(setTailwindMode);
-
-					typeScriptEstree.program.body.push(...setTailwindModeAst.program.body);
-
-					return {
-						typeScriptEstree,
-					};
-				},
-			});
-	}
 };
