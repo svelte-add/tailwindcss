@@ -1,7 +1,7 @@
 import { walk } from "estree-walker";
 import { AtRule } from "postcss";
 import { newTypeScriptEstreeAst } from "../../ast-io.js";
-import { addImport, findImport, getConfigObject } from "../../ast-tools.js";
+import { addImport, findImport, getConfigObject, setDefault } from "../../ast-tools.js";
 import { globalStylesheetPostcssPath, postcssConfigCjsPath } from "../postcss/stuff.js";
 import { tailwindConfigCjsPath } from "./stuff.js";
 
@@ -58,45 +58,22 @@ const updatePostcssConfig = (postcssConfigAst) => {
 		typeScriptEstree: postcssConfigAst,
 	});
 
-	// Try to find plugins config
-	/** @type {import("estree").Property | undefined} */
-	let pluginsConfig;
-	for (const property of configObject.properties) {
-		if (property.type !== "Property") continue;
-		if (property.key.type !== "Identifier") continue;
-		if (property.key.name !== "plugins") continue;
+	const pluginsList = setDefault({
+		default: {
+			type: "ArrayExpression",
+			elements: [],
+		},
+		object: configObject,
+		property: "plugins",
+	});
 
-		pluginsConfig = property;
-	}
+	if (pluginsList.type !== "ArrayExpression") throw new Error("`plugins` in PostCSS config needs to be an array");
 
-	// Or set it to [] if it doesn't exist
-	if (!pluginsConfig) {
-		pluginsConfig = {
-			type: "Property",
-			computed: false,
-			key: {
-				type: "Identifier",
-				name: "plugins",
-			},
-			kind: "init",
-			method: false,
-			shorthand: false,
-			value: {
-				type: "ArrayExpression",
-				elements: [],
-			},
-		};
-		configObject.properties.push(pluginsConfig);
-	}
-
-	if (pluginsConfig.value.type !== "ArrayExpression") throw new Error("`plugins` in PostCSS config needs to be an array");
-	const pluginsList = pluginsConfig.value.elements;
-
-	const goAfter = ["postcss-nested"];
+	const goAfter = ["tailwindcss/nesting", "postcss-nested"];
 	let minIndex = 0;
 
 	const goBefore = ["autoprefixer", "cssnano"];
-	let maxIndex = pluginsConfig.value.elements.length;
+	let maxIndex = pluginsList.elements.length;
 
 	// Find `tailwindcss` import or add it if it's not there
 	let tailwindcssImportedAs = findImport({ cjs: true, package: "tailwindcss", typeScriptEstree: postcssConfigAst }).require;
@@ -134,7 +111,7 @@ const updatePostcssConfig = (postcssConfigAst) => {
 		},
 	});
 
-	for (const [index, plugin] of pluginsList.entries()) {
+	for (const [index, plugin] of pluginsList.elements.entries()) {
 		if (!plugin) continue;
 
 		/** @type {string | undefined} */
@@ -162,14 +139,14 @@ const updatePostcssConfig = (postcssConfigAst) => {
 
 	// We have a range of acceptable values
 	// Let's use the latest slot because it's probably the most likely to work correctly
-	pluginsList.splice(maxIndex, 0, {
+	pluginsList.elements.splice(maxIndex, 0, {
 		// @ts-expect-error - Force accept the comment - TODO: find a better way to handle this
 		type: "Line",
 		// @ts-expect-error - Force accept the comment
 		value: `Some plugins, like ${goAfter[0]}, need to run before Tailwind`,
 	});
 
-	pluginsList.splice(
+	pluginsList.elements.splice(
 		maxIndex + 1,
 		0,
 		/** @type {import("estree").CallExpression} */ {
@@ -184,7 +161,7 @@ const updatePostcssConfig = (postcssConfigAst) => {
 		}
 	);
 
-	pluginsList.splice(maxIndex + 2, 0, {
+	pluginsList.elements.splice(maxIndex + 2, 0, {
 		// @ts-expect-error - Force accept the comment
 		type: "Line",
 		// @ts-expect-error - Force accept the comment
