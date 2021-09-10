@@ -2,8 +2,8 @@
 export const heuristics = [
 	{
 		description: "`tailwindcss` is installed",
-		async detector({ environment }) {
-			return "tailwindcss" in environment.dependencies || "tailwindcss" in environment.devDependencies;
+		async detector({ folderInfo }) {
+			return "tailwindcss" in folderInfo.dependencies || "tailwindcss" in folderInfo.devDependencies;
 		},
 	},
 	{
