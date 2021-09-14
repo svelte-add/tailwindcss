@@ -1,8 +1,8 @@
 import { walk } from "estree-walker";
 import { AtRule } from "postcss";
 import { newTypeScriptEstreeAst } from "../../ast-io.js";
-import { addImport, findImport, getConfigObject, setDefault } from "../../ast-tools.js";
-import { globalStylesheetPostcssPath, postcssConfigCjsPath } from "../postcss/stuff.js";
+import { addImport, findImport, getConfigExpression, setDefault } from "../../ast-tools.js";
+import { extension, postcssConfigCjsPath, stylesHint } from "../postcss/stuff.js";
 import { tailwindConfigCjsPath } from "./stuff.js";
 
 const tailwindAotConfig = `const { tailwindExtractor } = require("tailwindcss/lib/lib/purgeUnusedStyles");
@@ -53,10 +53,12 @@ module.exports = config;
  * @param {import("../../ast-io.js").RecastAST} postcssConfigAst
  */
 const updatePostcssConfig = (postcssConfigAst) => {
-	const configObject = getConfigObject({
+	const configObject = getConfigExpression({
 		cjs: true,
 		typeScriptEstree: postcssConfigAst,
 	});
+
+	if (configObject.type !== "ObjectExpression") throw new Error("postcss config must be an object");
 
 	const pluginsList = setDefault({
 		default: {
@@ -69,7 +71,7 @@ const updatePostcssConfig = (postcssConfigAst) => {
 
 	if (pluginsList.type !== "ArrayExpression") throw new Error("`plugins` in PostCSS config needs to be an array");
 
-	const goAfter = ["tailwindcss/nesting", "postcss-nested"];
+	const goAfter = ["tailwindcss/nesting", "postcss-nested", "postcss-import"];
 	let minIndex = 0;
 
 	const goBefore = ["autoprefixer", "cssnano"];
@@ -201,7 +203,7 @@ const updateGlobalStylesheet = (postcss) => {
 	if (lastImport) {
 		lastImport.after(base);
 	} else {
-		const [stylesHintComment] = postcss.nodes.filter((node) => node.type === "comment" && node.text === globalStylesheetPostcssPath);
+		const [stylesHintComment] = postcss.nodes.filter((node) => node.type === "comment" && node.text === stylesHint);
 
 		if (stylesHintComment) {
 			stylesHintComment.after(base);
@@ -234,7 +236,7 @@ export const run = async ({ install, options, updateCss, updateJavaScript }) => 
 	});
 
 	await updateCss({
-		path: globalStylesheetPostcssPath,
+		path: `/src/app.${extension}`,
 		async style({ postcss }) {
 			return {
 				postcss: updateGlobalStylesheet(postcss),

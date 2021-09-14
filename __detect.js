@@ -3,7 +3,7 @@ export const heuristics = [
 	{
 		description: "`tailwindcss` is installed",
 		async detector({ folderInfo }) {
-			return "tailwindcss" in folderInfo.dependencies || "tailwindcss" in folderInfo.devDependencies;
+			return "tailwindcss" in folderInfo.allDependencies;
 		},
 	},
 	{
