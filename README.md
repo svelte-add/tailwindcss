@@ -16,7 +16,7 @@ This adder supports SvelteKit and Vite-powered Svelte apps (all the environments
 
 ### ⚙️ Options
 
-- `jit` (default `true`): whether or not to use [Tailwind Just-in-Time Mode](https://tailwindcss.com/docs/just-in-time-mode)
+- `v3` (default `false`): whether or not to use [Tailwind 3](https://github.com/tailwindlabs/tailwindcss/discussions/5668), which is currently in alpha.
 
 ## 🛠 Using Tailwind CSS
 

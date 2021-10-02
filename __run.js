@@ -1,56 +1,12 @@
 import { walk } from "estree-walker";
 import { AtRule } from "postcss";
-import { newTypeScriptEstreeAst } from "../../ast-io.js";
-import { addImport, findImport, getConfigExpression, setDefault } from "../../ast-tools.js";
+import { addImport, findImport, getConfigExpression, setDefault, setPropertyValue } from "../../ast-tools.js";
 import { extension, postcssConfigCjsPath, stylesHint } from "../postcss/stuff.js";
 import { tailwindConfigCjsPath } from "./stuff.js";
 
-const tailwindAotConfig = `const { tailwindExtractor } = require("tailwindcss/lib/lib/purgeUnusedStyles");
-
-const config = {
-	mode: "aot",
-	purge: {
-		content: [
-			"./src/**/*.{html,js,svelte,ts}",
-		],
-		options: {
-			defaultExtractor: (content) => [
-				// If this stops working, please open an issue at https://github.com/svelte-add/svelte-add/issues rather than bothering Tailwind Labs about it
-				...tailwindExtractor(content),
-				// Match Svelte class: directives (https://github.com/tailwindlabs/tailwindcss/discussions/1731)
-				...[...content.matchAll(/(?:class:)*([\\w\\d-/:%.]+)/gm)].map(([_match, group, ..._rest]) => group),
-			],
-		},
-		safelist: [/^svelte-[\\d\\w]+$/],
-	},
-	theme: {
-		extend: {},
-	},
-	variants: {
-		extend: {},
-	},
-	plugins: [],
-};
-
-module.exports = config;
-`;
-
-const tailwindJitConfig = `const config = {
-	mode: "jit",
-	purge: [
-		"./src/**/*.{html,js,svelte,ts}",
-	],
-	theme: {
-		extend: {},
-	},
-	plugins: [],
-};
-
-module.exports = config;
-`;
-
 /**
  * @param {import("../../ast-io.js").RecastAST} postcssConfigAst
+ * @returns {import("../../ast-io.js").RecastAST}
  */
 const updatePostcssConfig = (postcssConfigAst) => {
 	const configObject = getConfigExpression({
@@ -58,7 +14,7 @@ const updatePostcssConfig = (postcssConfigAst) => {
 		typeScriptEstree: postcssConfigAst,
 	});
 
-	if (configObject.type !== "ObjectExpression") throw new Error("postcss config must be an object");
+	if (configObject.type !== "ObjectExpression") throw new Error("PostCSS config must be an object");
 
 	const pluginsList = setDefault({
 		default: {
@@ -174,6 +130,83 @@ const updatePostcssConfig = (postcssConfigAst) => {
 };
 
 /**
+ * @param {import("../../ast-io.js").RecastAST} tailwindConfigAst
+ * @param {boolean} tailwind3
+ * @returns {import("../../ast-io.js").RecastAST}
+ */
+const updateTailwindConfig = (tailwindConfigAst, tailwind3) => {
+	const configObject = getConfigExpression({
+		cjs: true,
+		typeScriptEstree: tailwindConfigAst,
+	});
+
+	if (configObject.type !== "ObjectExpression") throw new Error("Tailwind config must be an object");
+
+	if (!tailwind3) {
+		setPropertyValue({
+			object: configObject,
+			property: "mode",
+			value: {
+				type: "Literal",
+				value: "jit",
+			},
+		});
+	}
+
+	/** @type {import("estree").ArrayExpression} */
+	const content = {
+		type: "ArrayExpression",
+		elements: [
+			{
+				type: "Literal",
+				value: "./src/**/*.{html,js,svelte,ts}",
+			},
+		],
+	};
+	setDefault({
+		default: content,
+		object: configObject,
+		property: tailwind3 ? "content" : "purge",
+	});
+
+	/** @type {import("estree").ObjectExpression} */
+	const emptyTheme = {
+		type: "ObjectExpression",
+		properties: [],
+	};
+	const themeConfig = setDefault({
+		default: emptyTheme,
+		object: configObject,
+		property: "theme",
+	});
+	if (themeConfig.type !== "ObjectExpression") throw new Error("`theme` in Tailwind config must be an object");
+
+	/** @type {import("estree").ObjectExpression} */
+	const emptyThemeExtend = {
+		type: "ObjectExpression",
+		properties: [],
+	};
+	setDefault({
+		default: emptyThemeExtend,
+		object: themeConfig,
+		property: "extend",
+	});
+
+	/** @type {import("estree").ArrayExpression} */
+	const emptyPlugins = {
+		type: "ArrayExpression",
+		elements: [],
+	};
+	setDefault({
+		default: emptyPlugins,
+		object: configObject,
+		property: "plugins",
+	});
+
+	return tailwindConfigAst;
+};
+
+/**
  *
  * @param {import("../../ast-io.js").PostCSSAst} postcss
  * @returns {import("../../ast-io.js").PostCSSAst}
@@ -219,9 +252,9 @@ const updateGlobalStylesheet = (postcss) => {
 export const run = async ({ install, options, updateCss, updateJavaScript }) => {
 	await updateJavaScript({
 		path: tailwindConfigCjsPath,
-		async script() {
+		async script({ typeScriptEstree }) {
 			return {
-				typeScriptEstree: newTypeScriptEstreeAst(options.jit ? tailwindJitConfig : tailwindAotConfig),
+				typeScriptEstree: updateTailwindConfig(typeScriptEstree, options.v3),
 			};
 		},
 	});
@@ -244,5 +277,5 @@ export const run = async ({ install, options, updateCss, updateJavaScript }) => 
 		},
 	});
 
-	await install({ package: "tailwindcss" });
+	await install({ package: "tailwindcss", versionOverride: options.v3 ? "next" : undefined });
 };

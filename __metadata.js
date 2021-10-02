@@ -1,12 +1,12 @@
 export const name = "Tailwind CSS";
 
-/** @typedef {{ jit: boolean }} Options */
+/** @typedef {{ v3: boolean }} Options */
 
 /** @type {import("../..").AdderOptions<Options>} */
 export const options = {
-	jit: {
-		context: "https://tailwindcss.com/docs/just-in-time-mode\nIt is recommended, but you will see warning messages in the terminal (because it is in preview) and potentially run into unexpected issues, especially with @apply or nested selectors.",
-		default: true,
-		question: "Do you want to use Tailwind Just-in-Time mode?",
+	v3: {
+		context: "It is currently in alpha.",
+		default: false,
+		question: "Do you want to use Tailwind 3?",
 	},
 };
