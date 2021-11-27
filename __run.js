@@ -130,9 +130,11 @@ const updatePostcssConfig = (postcssConfigAst) => {
 /**
  * @param {import("../../ast-io.js").RecastAST} tailwindConfigAst
  * @param {boolean} tailwind3
+ * @param {boolean} forms
+ * @param {boolean} typography
  * @returns {import("../../ast-io.js").RecastAST}
  */
-const updateTailwindConfig = (tailwindConfigAst, tailwind3) => {
+const updateTailwindConfig = (tailwindConfigAst, tailwind3, forms, typography) => {
 	const configObject = getConfigExpression({
 		cjs: true,
 		typeScriptEstree: tailwindConfigAst,
@@ -195,11 +197,38 @@ const updateTailwindConfig = (tailwindConfigAst, tailwind3) => {
 		type: "ArrayExpression",
 		elements: [],
 	};
-	setDefault({
+	const pluginsList = setDefault({
 		default: emptyPlugins,
 		object: configObject,
 		property: "plugins",
 	});
+	if (pluginsList.type !== "ArrayExpression") throw new Error("`plugins` in Tailwind config must be an array");
+
+	if (forms) {
+		let formsImportedAs = findImport({ cjs: true, package: "@tailwindcss/forms", typeScriptEstree: tailwindConfigAst }).require;
+		// Add a forms plugin import if it's not there
+		if (!formsImportedAs) {
+			formsImportedAs = "forms";
+			addImport({ require: formsImportedAs, cjs: true, package: "@tailwindcss/forms", typeScriptEstree: tailwindConfigAst });
+		}
+		pluginsList.elements.push({
+			type: "Identifier",
+			name: formsImportedAs,
+		});
+	}
+
+	if (typography) {
+		let typographyImportedAs = findImport({ cjs: true, package: "@tailwindcss/typography", typeScriptEstree: tailwindConfigAst }).require;
+		// Add a typography plugin import if it's not there
+		if (!typographyImportedAs) {
+			typographyImportedAs = "typography";
+			addImport({ require: typographyImportedAs, cjs: true, package: "@tailwindcss/typography", typeScriptEstree: tailwindConfigAst });
+		}
+		pluginsList.elements.push({
+			type: "Identifier",
+			name: typographyImportedAs,
+		});
+	}
 
 	return tailwindConfigAst;
 };
@@ -252,7 +281,7 @@ export const run = async ({ install, options, updateCss, updateJavaScript }) => 
 		path: tailwindConfigCjsPath,
 		async script({ typeScriptEstree }) {
 			return {
-				typeScriptEstree: updateTailwindConfig(typeScriptEstree, options.v3),
+				typeScriptEstree: updateTailwindConfig(typeScriptEstree, options.v3, options.forms, options.typography),
 			};
 		},
 	});
@@ -276,4 +305,6 @@ export const run = async ({ install, options, updateCss, updateJavaScript }) => 
 	});
 
 	await install({ package: "tailwindcss", versionOverride: options.v3 ? "next" : undefined });
+	if (options.forms) await install({ package: "@tailwindcss/forms", versionOverride: options.v3 ? "next" : undefined });
+	if (options.typography) await install({ package: "@tailwindcss/typography", versionOverride: options.v3 ? "next" : undefined });
 };
