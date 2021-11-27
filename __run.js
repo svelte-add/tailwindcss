@@ -46,9 +46,7 @@ const updatePostcssConfig = (postcssConfigAst) => {
 		enter(node) {
 			if (node.type !== "VariableDeclarator") return;
 
-			/** @type {import("estree").VariableDeclarator} */
-			// prettier-ignore
-			const declarator = (node)
+			const declarator = /** @type {import("estree").VariableDeclarator} */ (node);
 
 			if (declarator.id.type !== "Identifier") return;
 			const identifier = declarator.id;
