@@ -16,8 +16,6 @@ This adder supports SvelteKit and Vite-powered Svelte apps (all the environments
 
 ### ⚙️ Options
 
-- `v3` (default `false`): whether or not to use [Tailwind 3](https://github.com/tailwindlabs/tailwindcss/discussions/5668), which is currently in alpha.
-
 - `forms` (default `false`): whether or not to install and set up the [Tailwind CSS Forms plugin](https://github.com/tailwindlabs/tailwindcss-forms).
 
 - `typography` (default `false`): whether or not to install and set up the [Tailwind CSS Typography plugin](https://github.com/tailwindlabs/tailwindcss-typography).

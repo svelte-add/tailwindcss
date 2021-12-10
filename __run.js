@@ -1,6 +1,6 @@
 import { walk } from "estree-walker";
 import { AtRule } from "postcss";
-import { addImport, findImport, getConfigExpression, setDefault, setPropertyValue } from "../../ast-tools.js";
+import { addImport, findImport, getConfigExpression, setDefault } from "../../ast-tools.js";
 import { extension, postcssConfigCjsPath, stylesHint } from "../postcss/stuff.js";
 import { tailwindConfigCjsPath } from "./stuff.js";
 
@@ -129,12 +129,11 @@ const updatePostcssConfig = (postcssConfigAst) => {
 
 /**
  * @param {import("../../ast-io.js").RecastAST} tailwindConfigAst
- * @param {boolean} tailwind3
  * @param {boolean} forms
  * @param {boolean} typography
  * @returns {import("../../ast-io.js").RecastAST}
  */
-const updateTailwindConfig = (tailwindConfigAst, tailwind3, forms, typography) => {
+const updateTailwindConfig = (tailwindConfigAst, forms, typography) => {
 	const configObject = getConfigExpression({
 		cjs: true,
 		typeScriptEstree: tailwindConfigAst,
@@ -142,31 +141,18 @@ const updateTailwindConfig = (tailwindConfigAst, tailwind3, forms, typography) =
 
 	if (configObject.type !== "ObjectExpression") throw new Error("Tailwind config must be an object");
 
-	if (!tailwind3) {
-		setPropertyValue({
-			object: configObject,
-			property: "mode",
-			value: {
-				type: "Literal",
-				value: "jit",
-			},
-		});
-	}
-
-	/** @type {import("estree").ArrayExpression} */
-	const content = {
-		type: "ArrayExpression",
-		elements: [
-			{
-				type: "Literal",
-				value: "./src/**/*.{html,js,svelte,ts}",
-			},
-		],
-	};
 	setDefault({
-		default: content,
+		default: /** @type {import("estree").ArrayExpression} */ ({
+			type: "ArrayExpression",
+			elements: [
+				{
+					type: "Literal",
+					value: "./src/**/*.{html,js,svelte,ts}",
+				},
+			],
+		}),
 		object: configObject,
-		property: tailwind3 ? "content" : "purge",
+		property: "content",
 	});
 
 	/** @type {import("estree").ObjectExpression} */
@@ -234,7 +220,6 @@ const updateTailwindConfig = (tailwindConfigAst, tailwind3, forms, typography) =
 };
 
 /**
- *
  * @param {import("../../ast-io.js").PostCSSAst} postcss
  * @returns {import("../../ast-io.js").PostCSSAst}
  */
@@ -281,7 +266,7 @@ export const run = async ({ install, options, updateCss, updateJavaScript }) => 
 		path: tailwindConfigCjsPath,
 		async script({ typeScriptEstree }) {
 			return {
-				typeScriptEstree: updateTailwindConfig(typeScriptEstree, options.v3, options.forms, options.typography),
+				typeScriptEstree: updateTailwindConfig(typeScriptEstree, options.forms, options.typography),
 			};
 		},
 	});
@@ -304,7 +289,7 @@ export const run = async ({ install, options, updateCss, updateJavaScript }) => 
 		},
 	});
 
-	await install({ package: "tailwindcss", versionOverride: options.v3 ? "next" : undefined });
-	if (options.forms) await install({ package: "@tailwindcss/forms", versionOverride: options.v3 ? "next" : undefined });
-	if (options.typography) await install({ package: "@tailwindcss/typography", versionOverride: options.v3 ? "next" : undefined });
+	await install({ package: "tailwindcss" });
+	if (options.forms) await install({ package: "@tailwindcss/forms" });
+	if (options.typography) await install({ package: "@tailwindcss/typography" });
 };

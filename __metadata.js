@@ -1,14 +1,9 @@
 export const name = "Tailwind CSS";
 
-/** @typedef {{ v3: boolean, forms: boolean, typography: boolean }} Options */
+/** @typedef {{ forms: boolean, typography: boolean }} Options */
 
 /** @type {import("../..").AdderOptions<Options>} */
 export const options = {
-	v3: {
-		context: "It is currently in alpha.",
-		default: false,
-		question: "Do you want to use Tailwind 3?",
-	},
 	forms: {
 		context: "https://github.com/tailwindlabs/tailwindcss-forms",
 		default: false,
