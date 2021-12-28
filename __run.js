@@ -91,7 +91,7 @@ const updatePostcssConfig = (postcssConfigAst) => {
 		}
 	}
 
-	if (minIndex > maxIndex) throw new Error("cannot find place to slot `tailwindcss()` as a plugin in the PostCSS config");
+	if (minIndex > maxIndex) throw new Error(`cannot find place to slot \`${tailwindcssImportedAs}()\` as a plugin in the PostCSS config`);
 
 	// We have a range of acceptable values
 	// Let's use the latest slot because it's probably the most likely to work correctly
