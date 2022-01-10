@@ -16,6 +16,15 @@ export const heuristics = [
 		},
 	},
 	{
+		description: "`tailwind.config.cjs` exists and `tailwind.config.js` does not exist",
+		async detector({ readFile }) {
+			const cjs = await readFile({ path: "/tailwind.config.cjs" });
+			const js = await readFile({ path: "/tailwind.config.js" });
+
+			return cjs.exists && !js.exists;
+		},
+	},
+	{
 		description: `\`@tailwind\` directives are used in \`src/app.${extension}\``,
 		async detector({ readFile }) {
 			const { text } = await readFile({ path: `/src/app.${extension}` });
