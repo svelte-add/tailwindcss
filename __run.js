@@ -260,7 +260,7 @@ const updateGlobalStylesheet = (postcss) => {
 	return postcss;
 };
 
-/** @type {import("../../index.js").AdderRun<import("./__metadata.js").Options>} */
+/** @type {import("../..").AdderRun<import("./__info.js").Options>} */
 export const run = async ({ install, options, updateCss, updateJavaScript }) => {
 	await updateJavaScript({
 		path: tailwindConfigCjsPath,
