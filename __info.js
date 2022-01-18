@@ -2,6 +2,11 @@ import { extension } from "../postcss/stuff.js";
 
 export const name = "Tailwind CSS";
 
+/** @type {import("../..").Gatekeep} */
+export const gatekeep = async () => {
+	return { able: true };
+};
+
 /** @typedef {{ forms: boolean, typography: boolean }} Options */
 
 /** @type {import("../..").AdderOptions<Options>} */
