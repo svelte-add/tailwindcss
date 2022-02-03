@@ -1,6 +1,6 @@
 import { walk } from "estree-walker";
 import { AtRule } from "postcss";
-import { addImport, findImport, getConfigExpression, setDefault } from "../../ast-tools.js";
+import { addImport, findImport, setDefaultDefaultExport, setDefault } from "../../ast-tools.js";
 import { extension, postcssConfigCjsPath, stylesHint } from "../postcss/stuff.js";
 import { tailwindConfigCjsPath } from "./stuff.js";
 
@@ -9,8 +9,12 @@ import { tailwindConfigCjsPath } from "./stuff.js";
  * @returns {import("../../ast-io.js").RecastAST}
  */
 const updatePostcssConfig = (postcssConfigAst) => {
-	const configObject = getConfigExpression({
+	const configObject = setDefaultDefaultExport({
 		cjs: true,
+		defaultValue: {
+			type: "ObjectExpression",
+			properties: [],
+		},
 		typeScriptEstree: postcssConfigAst,
 	});
 
@@ -134,8 +138,12 @@ const updatePostcssConfig = (postcssConfigAst) => {
  * @returns {import("../../ast-io.js").RecastAST}
  */
 const updateTailwindConfig = (tailwindConfigAst, forms, typography) => {
-	const configObject = getConfigExpression({
+	const configObject = setDefaultDefaultExport({
 		cjs: true,
+		defaultValue: {
+			type: "ObjectExpression",
+			properties: [],
+		},
 		typeScriptEstree: tailwindConfigAst,
 	});
 
