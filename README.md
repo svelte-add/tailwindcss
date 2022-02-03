@@ -20,11 +20,6 @@ This adder supports SvelteKit and Vite-powered Svelte apps (all the environments
 
 - `typography` (default `false`): whether or not to install and set up the [Tailwind CSS Typography plugin](https://github.com/tailwindlabs/tailwindcss-typography).
 
-Options can be used like so:
-```sh 
-npx svelte-add@latest tailwindcss --forms --typography
-```
-
 ## 🛠 Using Tailwind CSS
 
 After the adder runs,

@@ -2,6 +2,10 @@ import { extension } from "../postcss/stuff.js";
 
 export const name = "Tailwind CSS";
 
+export const emoji = "💨";
+
+export const usageMarkdown = ["You can use Tailwind utility classes like `bg-blue-700` in the markup (components, routes, `app.html`).", 'You can use [Tailwind directives like `@apply` and `@screen` or use the `theme` function](https://tailwindcss.com/docs/functions-and-directives) in Svelte `style lang="postcss"` blocks or the `src/app.css` file.', "You can [configure Tailwind](https://tailwindcss.com/docs/configuration) in the `tailwind.config.cjs` file.", "Your Tailwind CSS will be purged for production builds."];
+
 /** @type {import("../..").Gatekeep} */
 export const gatekeep = async () => {
 	return { able: true };
@@ -14,11 +18,13 @@ export const options = {
 	forms: {
 		context: "https://github.com/tailwindlabs/tailwindcss-forms",
 		default: false,
+		descriptionMarkdown: "whether or not to install and set up the [Tailwind CSS Forms plugin](https://github.com/tailwindlabs/tailwindcss-forms).",
 		question: "Do you want to use the Tailwind CSS Forms plugin?",
 	},
 	typography: {
 		context: "https://github.com/tailwindlabs/tailwindcss-typography",
 		default: false,
+		descriptionMarkdown: "whether or not to install and set up the [Tailwind CSS Typography plugin](https://github.com/tailwindlabs/tailwindcss-typography).",
 		question: "Do you want to use the Tailwind CSS Typography plugin?",
 	},
 };
