@@ -139,9 +139,10 @@ const updatePostcssConfig = (postcssConfigAst) => {
  * @param {import("../../ast-io.js").RecastAST} tailwindConfigAst
  * @param {boolean} forms
  * @param {boolean} typography
+ * @param {boolean} daisyui
  * @returns {import("../../ast-io.js").RecastAST}
  */
-const updateTailwindConfig = (tailwindConfigAst, forms, typography) => {
+const updateTailwindConfig = (tailwindConfigAst, forms, typography, daisyui) => {
 	const configObject = setDefaultDefaultExport({
 		cjs: true,
 		defaultValue: {
@@ -228,6 +229,19 @@ const updateTailwindConfig = (tailwindConfigAst, forms, typography) => {
 		});
 	}
 
+	if (daisyui) {
+		let daisyuiImportedAs = findImport({ cjs: true, package: "daisyui", typeScriptEstree: tailwindConfigAst }).require;
+		// Add a daisyUI plugin import if it's not there
+		if (!daisyuiImportedAs) {
+			daisyuiImportedAs = "daisyui";
+			addImport({ require: daisyuiImportedAs, cjs: true, package: "daisyui", typeScriptEstree: tailwindConfigAst });
+		}
+		pluginsList.elements.push({
+			type: "Identifier",
+			name: daisyuiImportedAs,
+		});
+	}
+
 	return tailwindConfigAst;
 };
 
@@ -278,7 +292,7 @@ export const run = async ({ install, options, updateCss, updateJavaScript }) => 
 		path: tailwindConfigCjsPath,
 		async script({ typeScriptEstree }) {
 			return {
-				typeScriptEstree: updateTailwindConfig(typeScriptEstree, options.forms, options.typography),
+				typeScriptEstree: updateTailwindConfig(typeScriptEstree, options.forms, options.typography, options.daisyui),
 			};
 		},
 	});
@@ -304,4 +318,5 @@ export const run = async ({ install, options, updateCss, updateJavaScript }) => 
 	await install({ package: "tailwindcss" });
 	if (options.forms) await install({ package: "@tailwindcss/forms" });
 	if (options.typography) await install({ package: "@tailwindcss/typography" });
+	if (options.daisyui) await install({ package: "daisyui" });
 };

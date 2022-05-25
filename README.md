@@ -20,6 +20,8 @@ This adder supports SvelteKit and Vite-powered Svelte apps (all the environments
 
 - `typography` (default `false`): whether or not to install and set up the [Tailwind CSS Typography plugin](https://github.com/tailwindlabs/tailwindcss-typography).
 
+- `daisyui` (default `false`): whether or not to install and set up [daisyUI](https://github.com/saadeghi/daisyui) as a Tailwind plugin.
+
 ## 🛠 Using Tailwind CSS
 
 After the adder runs,

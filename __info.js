@@ -11,7 +11,7 @@ export const gatekeep = async () => {
 	return { able: true };
 };
 
-/** @typedef {{ forms: boolean, typography: boolean }} Options */
+/** @typedef {{ forms: boolean, typography: boolean, daisyui: boolean }} Options */
 
 /** @type {import("../..").AdderOptions<Options>} */
 export const options = {
@@ -26,6 +26,12 @@ export const options = {
 		default: false,
 		descriptionMarkdown: "whether or not to install and set up the [Tailwind CSS Typography plugin](https://github.com/tailwindlabs/tailwindcss-typography).",
 		question: "Do you want to use the Tailwind CSS Typography plugin?",
+	},
+	daisyui: {
+		context: "It provides component classes for Tailwind CSS. https://daisyui.com/",
+		default: false,
+		descriptionMarkdown: "whether or not to install and set up [daisyUI](https://github.com/saadeghi/daisyui) as a Tailwind plugin.",
+		question: "Do you want to use daisyUI?",
 	},
 };
 
