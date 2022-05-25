@@ -29,104 +29,108 @@ const updatePostcssConfig = (postcssConfigAst) => {
 		property: "plugins",
 	});
 
-	if (pluginsList.type !== "ArrayExpression") throw new Error("`plugins` in PostCSS config needs to be an array");
+	if (pluginsList.type === "ArrayExpression") {
+		const goAfter = ["tailwindcss/nesting", "postcss-nested", "postcss-import"];
+		let minIndex = 0;
 
-	const goAfter = ["tailwindcss/nesting", "postcss-nested", "postcss-import"];
-	let minIndex = 0;
+		const goBefore = ["autoprefixer", "cssnano"];
+		let maxIndex = pluginsList.elements.length;
 
-	const goBefore = ["autoprefixer", "cssnano"];
-	let maxIndex = pluginsList.elements.length;
-
-	// Find `tailwindcss` import or add it if it's not there
-	let tailwindcssImportedAs = findImport({ cjs: true, package: "tailwindcss", typeScriptEstree: postcssConfigAst }).require;
-	if (!tailwindcssImportedAs) {
-		tailwindcssImportedAs = "tailwindcss";
-		addImport({ cjs: true, package: "tailwindcss", require: tailwindcssImportedAs, typeScriptEstree: postcssConfigAst });
-	}
-
-	/** @type {Record<string, string>} Identifier name -> imported package */
-	const imports = {};
-	walk(postcssConfigAst, {
-		enter(node) {
-			if (node.type !== "VariableDeclarator") return;
-
-			const declarator = /** @type {import("estree").VariableDeclarator} */ (node);
-
-			if (declarator.id.type !== "Identifier") return;
-			const identifier = declarator.id;
-
-			if (!declarator.init) return;
-			if (declarator.init.type !== "CallExpression") return;
-			const callExpression = declarator.init;
-
-			if (callExpression.callee.type !== "Identifier") return;
-
-			if (callExpression.callee.name !== "require") return;
-
-			if (callExpression.arguments[0].type !== "Literal") return;
-			const requireArgValue = callExpression.arguments[0].value;
-
-			if (typeof requireArgValue !== "string") return;
-			imports[identifier.name] = requireArgValue;
-		},
-	});
-
-	for (const [index, plugin] of pluginsList.elements.entries()) {
-		if (!plugin) continue;
-
-		/** @type {string | undefined} */
-		let determinedPlugin;
-
-		if (plugin.type === "CallExpression") {
-			if (plugin.callee.type === "Identifier") {
-				determinedPlugin = imports[plugin.callee.name];
-			}
-		} else if (plugin.type === "Identifier") {
-			determinedPlugin = imports[plugin.name];
+		// Find `tailwindcss` import or add it if it's not there
+		let tailwindcssImportedAs = findImport({ cjs: true, package: "tailwindcss", typeScriptEstree: postcssConfigAst }).require;
+		if (!tailwindcssImportedAs) {
+			tailwindcssImportedAs = "tailwindcss";
+			addImport({ cjs: true, package: "tailwindcss", require: tailwindcssImportedAs, typeScriptEstree: postcssConfigAst });
 		}
-		// TODO: detect conditional plugins (e.x. !dev && cssnano())
 
-		if (!determinedPlugin) continue;
+		/** @type {Record<string, string>} Identifier name -> imported package */
+		const imports = {};
+		walk(postcssConfigAst, {
+			enter(node) {
+				if (node.type !== "VariableDeclarator") return;
 
-		if (goAfter.includes(determinedPlugin)) {
-			if (index > minIndex) minIndex = index;
-		} else if (goBefore.includes(determinedPlugin)) {
-			if (index < maxIndex) maxIndex = index;
-		}
-	}
+				const declarator = /** @type {import("estree").VariableDeclarator} */ (node);
 
-	if (minIndex > maxIndex) throw new Error(`cannot find place to slot \`${tailwindcssImportedAs}()\` as a plugin in the PostCSS config`);
+				if (declarator.id.type !== "Identifier") return;
+				const identifier = declarator.id;
 
-	// We have a range of acceptable values
-	// Let's use the latest slot because it's probably the most likely to work correctly
-	pluginsList.elements.splice(maxIndex, 0, {
-		// @ts-expect-error - Force accept the comment - TODO: find a better way to handle this
-		type: "Line",
-		// @ts-expect-error - Force accept the comment
-		value: `Some plugins, like ${goAfter[0]}, need to run before Tailwind`,
-	});
+				if (!declarator.init) return;
+				if (declarator.init.type !== "CallExpression") return;
+				const callExpression = declarator.init;
 
-	pluginsList.elements.splice(
-		maxIndex + 1,
-		0,
-		/** @type {import("estree").CallExpression} */ {
-			type: "CallExpression",
-			// @ts-ignore - I am not sure why this is typed wrongly (?)
-			arguments: [],
-			callee: {
-				type: "Identifier",
-				name: tailwindcssImportedAs,
+				if (callExpression.callee.type !== "Identifier") return;
+
+				if (callExpression.callee.name !== "require") return;
+
+				if (callExpression.arguments[0].type !== "Literal") return;
+				const requireArgValue = callExpression.arguments[0].value;
+
+				if (typeof requireArgValue !== "string") return;
+				imports[identifier.name] = requireArgValue;
 			},
-			optional: false,
-		}
-	);
+		});
 
-	pluginsList.elements.splice(maxIndex + 2, 0, {
-		// @ts-expect-error - Force accept the comment
-		type: "Line",
-		// @ts-expect-error - Force accept the comment
-		value: `But others, like ${goBefore[0]}, need to run after`,
-	});
+		for (const [index, plugin] of pluginsList.elements.entries()) {
+			if (!plugin) continue;
+
+			/** @type {string | undefined} */
+			let determinedPlugin;
+
+			if (plugin.type === "CallExpression") {
+				if (plugin.callee.type === "Identifier") {
+					determinedPlugin = imports[plugin.callee.name];
+				}
+			} else if (plugin.type === "Identifier") {
+				determinedPlugin = imports[plugin.name];
+			}
+			// TODO: detect conditional plugins (e.x. !dev && cssnano())
+
+			if (!determinedPlugin) continue;
+
+			if (goAfter.includes(determinedPlugin)) {
+				if (index > minIndex) minIndex = index;
+			} else if (goBefore.includes(determinedPlugin)) {
+				if (index < maxIndex) maxIndex = index;
+			}
+		}
+
+		if (minIndex > maxIndex) throw new Error(`cannot find place to slot \`${tailwindcssImportedAs}()\` as a plugin in the PostCSS config`);
+
+		// We have a range of acceptable values
+		// Let's use the latest slot because it's probably the most likely to work correctly
+		pluginsList.elements.splice(maxIndex, 0, {
+			// @ts-expect-error - Force accept the comment - TODO: find a better way to handle this
+			type: "Line",
+			// @ts-expect-error - Force accept the comment
+			value: `Some plugins, like ${goAfter[0]}, need to run before Tailwind`,
+		});
+
+		pluginsList.elements.splice(
+			maxIndex + 1,
+			0,
+			/** @type {import("estree").CallExpression} */ {
+				type: "CallExpression",
+				arguments: [],
+				callee: {
+					type: "Identifier",
+					name: tailwindcssImportedAs,
+				},
+				optional: false,
+			}
+		);
+
+		pluginsList.elements.splice(maxIndex + 2, 0, {
+			// @ts-expect-error - Force accept the comment
+			type: "Line",
+			// @ts-expect-error - Force accept the comment
+			value: `But others, like ${goBefore[0]}, need to run after`,
+		});
+	} else if (pluginsList.type === "ObjectExpression") {
+		// TODO
+		throw new Error("`plugins` in PostCSS config must be an array (object support is coming soon)");
+	} else {
+		throw new Error("`plugins` in PostCSS config must be an array (object support is coming soon)");
+	}
 
 	return postcssConfigAst;
 };
