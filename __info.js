@@ -4,7 +4,7 @@ export const name = "Tailwind CSS";
 
 export const emoji = "💨";
 
-export const usageMarkdown = ["You can use Tailwind utility classes like `bg-blue-700` in the markup (components, routes, `app.html`).", 'You can use [Tailwind directives like `@apply` and `@screen` or use the `theme` function](https://tailwindcss.com/docs/functions-and-directives) in Svelte `style lang="postcss"` blocks or the `src/app.css` file.', "You can [configure Tailwind](https://tailwindcss.com/docs/configuration) in the `tailwind.config.cjs` file.", "Your Tailwind CSS will be purged for production builds."];
+export const usageMarkdown = ["You can use Tailwind utility classes like `bg-blue-700` in the markup (components, routes, `app.html`).", 'You can use [Tailwind directives like `@apply` and `@screen` or use the `theme` function](https://tailwindcss.com/docs/functions-and-directives) in Svelte `style lang="postcss"` blocks or the `src/app.postcss` file.', "You can [configure Tailwind](https://tailwindcss.com/docs/configuration) in the `tailwind.config.cjs` file.", "Your Tailwind CSS will be purged for production builds."];
 
 /** @type {import("../..").Gatekeep} */
 export const gatekeep = async () => {
