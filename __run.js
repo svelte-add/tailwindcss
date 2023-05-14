@@ -1,6 +1,6 @@
 import { walk } from "estree-walker";
 import { AtRule } from "postcss";
-import { addImport, findImport, setDefaultDefaultExport, setDefault } from "../../ast-tools.js";
+import { addImport, findImport, setDefaultDefaultExport, setDefault, addRootBlockComment } from "../../ast-tools.js";
 import { extension, postcssConfigCjsPath, stylesHint } from "../postcss/stuff.js";
 import { tailwindConfigCjsPath } from "./stuff.js";
 
@@ -153,6 +153,9 @@ const updateTailwindConfig = (tailwindConfigAst, forms, typography, daisyui) => 
 	});
 
 	if (configObject.type !== "ObjectExpression") throw new Error("Tailwind config must be an object");
+
+	const typeComment = "* @type {import('tailwindcss').Config}";
+	addRootBlockComment({ typeScriptEstree: tailwindConfigAst, value: typeComment });
 
 	setDefault({
 		default: /** @type {import("estree").ArrayExpression} */ ({
