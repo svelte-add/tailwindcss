@@ -1,5 +1,8 @@
 <h1 align="center">💨 Add Tailwind CSS to Svelte</h1>
 
+[![GitHub issues by-label](https://img.shields.io/github/issues/svelte-add/svelte-add/confirmed%20bug?color=%23DC2626)](https://github.com/svelte-add/svelte-add/issues?q=is%3Aopen+is%3Aissue+label%3A%22confirmed+bug%22)
+[![GitHub issues by-label](https://img.shields.io/github/issues/svelte-add/svelte-add/support%20question?color=%23FACC15)](https://github.com/svelte-add/svelte-add/issues?q=is%3Aopen+is%3Aissue+label%3A%22support+question%22)
+
 This is an adder for `svelte-add`; you should [read its `README`](https://github.com/svelte-add/svelte-add#readme) before continuing here.
 
 ## ➕ Adding Tailwind CSS
@@ -21,6 +24,10 @@ This adder supports SvelteKit and Vite-powered Svelte apps (all the environments
 - `typography` (default `false`): whether or not to install and set up the [Tailwind CSS Typography plugin](https://github.com/tailwindlabs/tailwindcss-typography).
 
 - `daisyui` (default `false`): whether or not to install and set up [daisyUI](https://github.com/saadeghi/daisyui) as a Tailwind plugin.
+
+```sh
+npx svelte-add@latest tailwindcss --tailwindcss-forms --tailwindcss-typography --tailwindcss-daisyui
+```
 
 ## 🛠 Using Tailwind CSS
 
