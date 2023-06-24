@@ -101,7 +101,6 @@ const updatePostcssConfig = (postcssConfigAst) => {
 		pluginsList.elements.splice(maxIndex, 0, {
 			// @ts-expect-error - Force accept the comment - TODO: find a better way to handle this
 			type: "Line",
-			// @ts-expect-error - Force accept the comment
 			value: `Some plugins, like ${goAfter[0]}, need to run before Tailwind`,
 		});
 
@@ -122,7 +121,6 @@ const updatePostcssConfig = (postcssConfigAst) => {
 		pluginsList.elements.splice(maxIndex + 2, 0, {
 			// @ts-expect-error - Force accept the comment
 			type: "Line",
-			// @ts-expect-error - Force accept the comment
 			value: `But others, like ${goBefore[0]}, need to run after`,
 		});
 	} else if (pluginsList.type === "ObjectExpression") {
