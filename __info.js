@@ -1,4 +1,5 @@
 import { extension } from "../postcss/stuff.js";
+import { prettierConfigPath } from "./stuff.js";
 
 export const name = "Tailwind CSS";
 
@@ -68,6 +69,27 @@ export const heuristics = [
 			if (!text.includes("@tailwind utilities")) return false;
 
 			return true;
+		},
+	},
+	{
+		description: "prettier is configured (if installed)",
+		async detector({ folderInfo, readFile }) {
+			// skip if prettier is not installed
+			const isInstalled = "prettier" in folderInfo.allDependencies;
+			if (!isInstalled) return true;
+
+			// check plugins
+			const tailwindPlugin = "prettier-plugin-tailwindcss" in folderInfo.allDependencies;
+			const sveltePlugin = "prettier-plugin-svelte" in folderInfo.allDependencies;
+			if (!tailwindPlugin || sveltePlugin) return false;
+
+			// prettier-plugin-tailwindcss should replace prettier-plugin-svelte in .prettierrc
+			const prettierConfig = await readFile({ path: prettierConfigPath });
+			if (!prettierConfig) return false;
+
+			const { text } = prettierConfig;
+			const { plugins } = JSON.parse(text);
+			return plugins.includes("prettier-plugin-tailwindcss") && !plugins.includes("prettier-plugin-svelte");
 		},
 	},
 ];

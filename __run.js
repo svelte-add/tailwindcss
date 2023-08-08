@@ -2,7 +2,7 @@ import { walk } from "estree-walker";
 import { AtRule } from "postcss";
 import { addImport, findImport, setDefaultDefaultExport, setDefault, addRootBlockComment } from "../../ast-tools.js";
 import { extension, postcssConfigCjsPath, stylesHint } from "../postcss/stuff.js";
-import { tailwindConfigCjsPath } from "./stuff.js";
+import { tailwindConfigCjsPath, prettierConfigPath } from "./stuff.js";
 
 /**
  * @param {import("../../ast-io.js").RecastAST} postcssConfigAst
@@ -288,7 +288,7 @@ const updateGlobalStylesheet = (postcss) => {
 };
 
 /** @type {import("../..").AdderRun<import("./__info.js").Options>} */
-export const run = async ({ install, options, updateCss, updateJavaScript }) => {
+export const run = async ({ install, options, updateCss, updateJavaScript, updateJson, folderInfo }) => {
 	await updateJavaScript({
 		path: tailwindConfigCjsPath,
 		async script({ typeScriptEstree }) {
@@ -320,4 +320,27 @@ export const run = async ({ install, options, updateCss, updateJavaScript }) => 
 	if (options.forms) await install({ package: "@tailwindcss/forms" });
 	if (options.typography) await install({ package: "@tailwindcss/typography" });
 	if (options.daisyui) await install({ package: "daisyui" });
+
+	if ("prettier" in folderInfo.allDependencies) {
+		// update plugins in prettier config
+		await updateJson({
+			path: prettierConfigPath,
+			async json({ obj }) {
+				const plugins = obj.plugins.filter((/** @type {string} */ plugin) => plugin !== "prettier-plugin-svelte");
+				obj.plugins = ["prettier-plugin-tailwindcss", ...plugins];
+				return { obj };
+			},
+		});
+
+		// update package.json
+		await updateJson({
+			path: "/package.json",
+			async json({ obj }) {
+				delete obj.devDependencies["prettier-plugin-svelte"];
+				return { obj };
+			},
+		});
+
+		await install({ package: "prettier-plugin-tailwindcss" });
+	}
 };
