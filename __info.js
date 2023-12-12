@@ -80,16 +80,14 @@ export const heuristics = [
 
 			// check plugins
 			const tailwindPlugin = "prettier-plugin-tailwindcss" in folderInfo.allDependencies;
-			const sveltePlugin = "prettier-plugin-svelte" in folderInfo.allDependencies;
-			if (!tailwindPlugin || sveltePlugin) return false;
+			if (!tailwindPlugin) return false;
 
-			// prettier-plugin-tailwindcss should replace prettier-plugin-svelte in .prettierrc
 			const prettierConfig = await readFile({ path: prettierConfigPath });
 			if (!prettierConfig) return false;
 
 			const { text } = prettierConfig;
 			const { plugins } = JSON.parse(text);
-			return plugins.includes("prettier-plugin-tailwindcss") && !plugins.includes("prettier-plugin-svelte");
+			return plugins.includes("prettier-plugin-tailwindcss");
 		},
 	},
 ];
