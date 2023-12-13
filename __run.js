@@ -326,17 +326,7 @@ export const run = async ({ install, options, updateCss, updateJavaScript, updat
 		await updateJson({
 			path: prettierConfigPath,
 			async json({ obj }) {
-				const plugins = obj.plugins.filter((/** @type {string} */ plugin) => plugin !== "prettier-plugin-svelte");
-				obj.plugins = ["prettier-plugin-tailwindcss", ...plugins];
-				return { obj };
-			},
-		});
-
-		// update package.json
-		await updateJson({
-			path: "/package.json",
-			async json({ obj }) {
-				delete obj.devDependencies["prettier-plugin-svelte"];
+				obj.plugins = obj.plugins ? [...obj.plugins, "prettier-plugin-tailwindcss"] : ["prettier-plugin-tailwindcss"];
 				return { obj };
 			},
 		});
