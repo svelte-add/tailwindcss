@@ -115,7 +115,7 @@ const updatePostcssConfig = (postcssConfigAst) => {
 					name: tailwindcssImportedAs,
 				},
 				optional: false,
-			}
+			},
 		);
 
 		pluginsList.elements.splice(maxIndex + 2, 0, {
